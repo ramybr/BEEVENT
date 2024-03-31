@@ -12,11 +12,16 @@ model Event {
   id Int @id @default(autoincrement())
   name String @db.Text
   description String? @db.Text
+
+  userId String @unique
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+
   
    
   type Type 
 
-  location String @db.Text
+  location String? @db.Text
 
   
   status EventStatus 
@@ -47,7 +52,7 @@ enum EventStatus {
 
 model Participation {
   @@id([userId, eventId])
-  userId Int
+  userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   eventId Int
@@ -56,7 +61,7 @@ model Participation {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
+  id    String  @id 
   firstName  String
   lastName String
   email String  @unique
@@ -70,6 +75,8 @@ model User {
 
   attendances Attendance[]
 
+  events Event[]
+
 }
 
 enum userRole {
@@ -80,7 +87,7 @@ enum userRole {
 model Attendance {
  
   @@id([userId, sessionId])
-  userId Int
+  userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   sessionId Int
