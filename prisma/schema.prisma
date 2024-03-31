@@ -13,18 +13,18 @@ model Event {
   name String @db.Text
   description String? @db.Text
 
-  userId String @unique
+  userId String 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
 
   
    
-  type Type 
+  type Type? 
 
   location String? @db.Text
 
   
-  status EventStatus 
+  status EventStatus @default(upcoming)
 
   isOpen Boolean @default(true)
   isMandatory Boolean @default(false)
