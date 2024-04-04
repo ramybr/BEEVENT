@@ -5,24 +5,24 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const { userId } = auth();
-    const { name } = await req.json();
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const event = await db.event.create({
+    const userData = await req.json();
+
+    const user = await db.user.create({
       data: {
-        userId,
-        name,
+        id: userId,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
       },
     });
 
-    
-
-    return NextResponse.json(event);
+    return NextResponse.json(user);
   } catch (error) {
-    console.log("[Events]", error);
+    console.log("[Users]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

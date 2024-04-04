@@ -9,7 +9,7 @@ generator client {
 }
 
 model Event {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   name String @db.Text
   description String? @db.Text
 
@@ -24,7 +24,7 @@ model Event {
   location String? @db.Text
 
   
-  status EventStatus @default(upcoming)
+  status EventStatus @default(UPCOMING)
 
   isOpen Boolean @default(true)
   isMandatory Boolean @default(false)
@@ -38,24 +38,24 @@ model Event {
 }
 
 enum Type {
-  workshop
-  training
-  other
+  WORKSHOP
+  TRAINING
+  OTHER
 }
 
 enum EventStatus {
-  upcoming
-  finished
-  inProgress
-  cancelled
+  UPCOMING
+  FINICHED
+  IN_PROGRESS
+  CANCELLED
 }
 
 model Participation {
-  @@id([userId, eventId])
+  id String @id @default(uuid())
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  eventId Int
+  eventId String
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
 }
@@ -64,9 +64,12 @@ model User {
   id    String  @id 
   firstName  String
   lastName String
-  email String  @unique
+  email String?  
 
-  userRole String
+  role String?
+
+  organization_id String? 
+  organization Organization? @relation(fields: [organization_id], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -75,7 +78,7 @@ model User {
 
   attendances Attendance[]
 
-  events Event[]
+  eventsCreated Event[]
 
 }
 
@@ -90,7 +93,7 @@ model Attendance {
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  sessionId Int
+  sessionId String
   session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
   isPresent Boolean
@@ -98,9 +101,9 @@ model Attendance {
 }
 
 model Session {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   
-  eventId Int
+  eventId String
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   attendaces Attendance[]
@@ -113,10 +116,32 @@ model Session {
 }
 
 enum SessionStatus {
-  upcoming
-  finished
-  inProgress
-  cancelled
+  UPCOMING
+  FINICHED
+  IN_PROGRESS
+  CANCELLED
+}
+
+model Organization {
+  id String @id @default(uuid())
+  name String
+  activitySector ActivitySector
+
+  employees User[]
+}
+
+enum ActivitySector {
+  TECHNOLOGY
+  ENERGY
+  FINANCE
+  HEALTH_CARE
+  TELECOMMUNICATIONS
+  MOTOR_VEHICULES
+  FOOD_BEVERAGE
+  TRANSPORTATIONS
+  ENGINEERING_CONSTRUCTION
+  MEDIA
+  OTHER
 }
 
  
