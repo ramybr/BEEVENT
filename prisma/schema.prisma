@@ -9,11 +9,11 @@ generator client {
 }
 
 model Event {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
   name String @db.Text
   description String? @db.Text
 
-  userId String 
+  userId Int 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
 
@@ -51,24 +51,26 @@ enum EventStatus {
 }
 
 model Participation {
-  id String @id @default(uuid())
-  userId String
+  id Int @id @default(autoincrement())
+  userId Int
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  eventId String
+  eventId Int
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
 }
 
 model User {
-  id    String  @id 
+  id    Int  @id @default(autoincrement())
+  clerkId String @unique 
+
   firstName  String
   lastName String
   email String?  
 
   role String?
 
-  organization_id String? 
+  organization_id Int? 
   organization Organization? @relation(fields: [organization_id], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
@@ -90,10 +92,11 @@ enum userRole {
 model Attendance {
  
   @@id([userId, sessionId])
-  userId String
+  userId Int
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  sessionId String
+
+  sessionId Int
   session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
   isPresent Boolean
@@ -101,9 +104,9 @@ model Attendance {
 }
 
 model Session {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
   
-  eventId String
+  eventId Int
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   attendaces Attendance[]
@@ -123,7 +126,7 @@ enum SessionStatus {
 }
 
 model Organization {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
   name String
   activitySector ActivitySector
 

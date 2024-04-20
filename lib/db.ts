@@ -6,4 +6,4 @@ declare global {
 
 export const db = globalThis.prisma || new PrismaClient();
 
-if (process.env.NODE_ENV !== "production") globalThis.prisma = db;
+// Assuming userData comes in the form Clerk provides which we may need to map accordingly
