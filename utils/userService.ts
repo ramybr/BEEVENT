@@ -1,11 +1,11 @@
-// // utils/userService.ts
+// utils/userService.ts
 
-// import { db } from "@/lib/db"; // Import your Prisma client
+import { db } from "@/lib/db"; // Import your Prisma client
 
-// export async function getUserByClerkUserId(clerkUserId: string) {
-//   return await db.user.findUnique({
-//     where: {
-//       id: clerkUserId,
-//     },
-//   });
-// }
+export async function getUserByClerkUserId(clerkUserId: string) {
+  return await db.user.findUnique({
+    where: {
+      clerkId: clerkUserId,
+    },
+  });
+}

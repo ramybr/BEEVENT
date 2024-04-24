@@ -80,7 +80,7 @@ export async function POST(req: Request) {
           where: { id: user.id },
           data: {
             firstName: evt.data.first_name,
-            lastName: "test",
+            lastName: evt.data.last_name,
             email: evt.data.email_addresses[0]?.email_address,
           },
         });

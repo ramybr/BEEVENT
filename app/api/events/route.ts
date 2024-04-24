@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
+import { getUserByClerkUserId } from "@/utils/userService";
 
 export async function POST(req: Request) {
   try {
@@ -11,14 +12,18 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
+    const user = await getUserByClerkUserId(userId);
+
+    if (!user) {
+      return new NextResponse("User not found", { status: 404 });
+    }
+
     const event = await db.event.create({
       data: {
-        userId,
+        userId: user.id,
         name,
       },
     });
-
-    
 
     return NextResponse.json(event);
   } catch (error) {
