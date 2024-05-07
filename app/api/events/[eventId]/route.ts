@@ -26,7 +26,7 @@ export async function DELETE(
 
     const event = await db.event.findUnique({
       where: {
-        id: params.eventId,
+        id: Number(params.eventId),
         userId: user.id,
       },
     });
@@ -37,7 +37,7 @@ export async function DELETE(
 
     const deletedevent = await db.event.delete({
       where: {
-        id: params.eventId,
+        id: Number(params.eventId),
       },
     });
 
@@ -54,7 +54,6 @@ export async function PATCH(
 ) {
   try {
     const { userId } = auth();
-    const { eventId } = params;
     const values = await req.json();
 
     if (!userId) {
@@ -73,7 +72,7 @@ export async function PATCH(
 
     const event = await db.event.update({
       where: {
-        id: eventId,
+        id: Number(params.eventId),
         userId: user.id,
       },
       data: {
