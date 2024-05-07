@@ -41,6 +41,7 @@ const CreatePage = () => {
     try {
       const response = await axios.post("/api/events", values);
       router.push(`/user/events/${response.data.id}`);
+      console.log("response", response.data);
       toast.success("Event created");
     } catch {
       toast.error("Something went wrong");
@@ -85,7 +86,7 @@ const CreatePage = () => {
                   <FormControl>
                     <Input
                       disabled={isSubmitting}
-                      placeholder="e.g. 'Advanced web development'"
+                      placeholder="e.g. 'Seminar for web developers'"
                       {...field}
                     />
                   </FormControl>
