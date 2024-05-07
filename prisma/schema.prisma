@@ -16,8 +16,9 @@ model Event {
   userId Int 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-   
-  type Type? 
+  eventTypeId Int?
+  eventType EventType? @relation(fields: [eventTypeId], references: [id], onDelete: Cascade)
+
 
   location String? @db.Text
 
@@ -107,16 +108,19 @@ model Attendance {
 model Session {
   id Int @id @default(autoincrement())
   
+  title String
   eventId Int
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   attendaces Attendance[]
 
-  date DateTime
+  date DateTime @default(now())
   imageUrl String? @db.Text
   description String? @db.Text
 
-  status SessionStatus
+  createdAt DateTime @default(now())
+
+  status SessionStatus @default(UPCOMING)
 }
 
 enum SessionStatus {
@@ -147,5 +151,12 @@ enum ActivitySector {
   MEDIA
   OTHER
 }
+
+model EventType {
+  id Int @id @default(autoincrement())
+  name String @unique
+  events Event[]
+}
+
 
  
