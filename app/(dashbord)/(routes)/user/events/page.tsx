@@ -13,13 +13,11 @@ const EventsPage = async () => {
     return redirect("/");
   }
 
-  const user = await db.user.findFirst({
+  const user = await db.user.findUnique({
     where: {
       clerkId: userId,
     },
   });
-
-  console.log(user);
 
   if (!user) {
     return new NextResponse("User not found", { status: 404 });
