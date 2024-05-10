@@ -50,10 +50,7 @@ export const SessionTitleForm = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(
-        `/api/courses/${eventId}/sessions/${sessionId}`,
-        values
-      );
+      await axios.patch(`/api/events/${eventId}/sessions/${sessionId}`, values);
       toast.success("Session edited");
       toggleEdit();
       router.refresh();
