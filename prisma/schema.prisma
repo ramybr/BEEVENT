@@ -118,6 +118,8 @@ model Session {
   imageUrl String? @db.Text
   description String? @db.Text
 
+  position Int @default(0)
+
   createdAt DateTime @default(now())
 
   status SessionStatus @default(UPCOMING)
