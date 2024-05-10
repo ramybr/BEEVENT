@@ -99,7 +99,7 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
                 <IconBadge icon={ListChecks} />
                 <h2 className="text-xl">Event sessions</h2>
               </div>
-              {/* <SessionsForm initialData={event} eventId={event.id} /> */}
+              <SessionsForm initialData={event} eventId={event.id} />
             </div>
           </div>
         </div>
