@@ -35,10 +35,22 @@ export async function POST(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
+    const lastSession = await db.session.findFirst({
+      where: {
+        eventId: Number(params.eventId),
+      },
+      orderBy: {
+        position: "desc",
+      },
+    });
+
+    const newPosition = lastSession ? lastSession.position + 1 : 1;
+
     const session = await db.session.create({
       data: {
         title,
         eventId: Number(params.eventId),
+        position: newPosition,
       },
     });
 

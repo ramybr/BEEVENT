@@ -95,7 +95,6 @@ export const SessionsList = ({
                         className="w-4 h-4 cursor-pointer hover:opacity-75 transition"
                       />
                     </div>
-                    //{" "}
                   </div>
                 )}
               </Draggable>

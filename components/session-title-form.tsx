@@ -89,7 +89,7 @@ export const SessionTitleForm = ({
                   <FormControl>
                     <Input
                       disabled={isSubmitting}
-                      placeholder="e.g 'Introduction to the course'"
+                      placeholder="Session title"
                       {...field}
                     />
                   </FormControl>

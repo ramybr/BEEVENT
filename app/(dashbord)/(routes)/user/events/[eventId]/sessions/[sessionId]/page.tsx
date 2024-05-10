@@ -6,6 +6,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SessionTitleForm } from "@/components/session-title-form";
 import { SessionDescriptionForm } from "@/components/session-description-form";
+import { Actions } from "@/components/actions";
 
 const ChapterIdPage = async ({
   params,
