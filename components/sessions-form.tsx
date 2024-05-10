@@ -19,9 +19,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Session, Event } from "@prisma/client";
 import { Input } from "@/components/ui/input";
-import { db } from "@/lib/db";
-import { DataTable } from "./data-table";
-import { columns } from "./columns";
+import { SessionsList } from "./sessions-list";
 
 type SessionsFormProps = {
   initialData: Event & { sessions: Session[] };
@@ -32,31 +30,9 @@ const formSchema = z.object({
   title: z.string().min(1),
 });
 
-export const SessionsForm = async ({
-  initialData,
-  eventId,
-}: SessionsFormProps) => {
+export const SessionsForm = ({ initialData, eventId }: SessionsFormProps) => {
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-
-  const event = await db.event.findUnique({
-    where: {
-      id: eventId,
-    },
-  });
-
-  if (!event) {
-    return null;
-  }
-
-  const sessions = await db.session.findMany({
-    where: {
-      eventId: event.id,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
 
   const toggleCreating = () => {
     setIsCreating((current) => !current);
@@ -76,7 +52,7 @@ export const SessionsForm = async ({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.post(`/api/events/${eventId}/sessions`, values);
-      toast.success("Event edited");
+      toast.success("Session created");
       toggleCreating();
       router.refresh();
     } catch {
@@ -84,25 +60,25 @@ export const SessionsForm = async ({
     }
   };
 
-  // const onReorder = async (updateData: { id: string; position: number }[]) => {
-  //   try {
-  //     setIsUpdating(true);
+  const onReorder = async (updateData: { id: number; position: number }[]) => {
+    try {
+      setIsUpdating(true);
 
-  //     await axios.put(`/api/events/${eventId}/sessions/reorder`, {
-  //       list: updateData,
-  //     });
-  //     toast.success("Sessions reordered");
-  //   } catch (error) {
-  //     toast.error("Something went wrong");
-  //     router.refresh();
-  //   } finally {
-  //     setIsUpdating(false);
-  //   }
-  // };
+      await axios.put(`/api/events/${eventId}/sessions/reorder`, {
+        list: updateData,
+      });
+      toast.success("Sessions reordered");
+    } catch (error) {
+      toast.error("Something went wrong");
+      router.refresh();
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
-  // const onEdit = (id: number) => {
-  //   router.push(`/user/events/${eventId}/sessions/${id}`);
-  // };
+  const onEdit = (id: number) => {
+    router.push(`/user/events/${eventId}/sessions/${id}`);
+  };
 
   return (
     <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
@@ -138,7 +114,7 @@ export const SessionsForm = async ({
                   <FormControl>
                     <Input
                       disabled={isSubmitting}
-                      placeholder="e.g 'About the event'"
+                      placeholder="e.g 'Introduction to the course'"
                       {...field}
                     />
                   </FormControl>
@@ -161,23 +137,13 @@ export const SessionsForm = async ({
           )}
         >
           {!initialData.sessions.length && "No sessions"}
-          {initialData.sessions.length && (
-            <div className="p-6">
-              {sessions.map((session) => session.title)}
-            </div>
-          )}
-          {/* <SessionsList
+          <SessionsList
             onEdit={onEdit}
             onReorder={onReorder}
             items={initialData.sessions || []}
-          /> */}
+          />
         </div>
       )}
-      {/* {!isCreating && (
-        <p className="text-xs text-muted-foreground mt-4">
-          Drag to re-order sessions
-        </p>
-      )} */}
     </div>
   );
 };
