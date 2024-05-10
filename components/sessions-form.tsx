@@ -114,7 +114,7 @@ export const SessionsForm = ({ initialData, eventId }: SessionsFormProps) => {
                   <FormControl>
                     <Input
                       disabled={isSubmitting}
-                      placeholder="e.g 'Introduction to the course'"
+                      placeholder="Session content"
                       {...field}
                     />
                   </FormControl>
