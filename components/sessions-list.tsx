@@ -38,13 +38,13 @@ export const SessionsList = ({
     if (!result.destination) return;
 
     const items = Array.from(sessions);
-    const [reorderedItems] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItems);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
 
     const startIndex = Math.min(result.source.index, result.destination.index);
     const endIndex = Math.max(result.source.index, result.destination.index);
 
-    const updatedSessions = items.slice(startIndex, endIndex);
+    const updatedSessions = items.slice(startIndex, endIndex + 1);
 
     setSessions(items);
 

@@ -38,7 +38,7 @@ export async function DELETE(
 
     const deletesession = await db.session.delete({
       where: {
-        id: Number(params.eventId),
+        id: Number(params.sessionId),
       },
     });
 

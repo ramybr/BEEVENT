@@ -10,16 +10,11 @@ import { Button } from "@/components/ui/button";
 import { ConfirmModal } from "@/components/modals/confirm-modal";
 
 interface SessionActionsProps {
-  disabled: boolean;
   eventId: number;
-  sessionId: string;
+  sessionId: number;
 }
 
-export const SessionActions = ({
-  disabled,
-  eventId,
-  sessionId,
-}: SessionActionsProps) => {
+export const SessionActions = ({ eventId, sessionId }: SessionActionsProps) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,11 +22,13 @@ export const SessionActions = ({
     try {
       setIsLoading(true);
 
-      await axios.delete(`/api/courses/${eventId}/sessions/${sessionId}`);
+      await axios.delete(`/api/events/${eventId}/sessions/${sessionId}`);
 
       toast.success("Session deleted");
       router.refresh();
-      router.push(`/user/events/${eventId}`);
+      setTimeout(() => {
+        router.push(`/user/events/${eventId}`);
+      }, 500);
     } catch {
       toast.error("Something went wrong");
     } finally {
@@ -49,3 +46,4 @@ export const SessionActions = ({
     </div>
   );
 };
+//  delete session from the database

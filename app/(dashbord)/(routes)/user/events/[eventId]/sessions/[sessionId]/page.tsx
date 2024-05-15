@@ -6,7 +6,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SessionTitleForm } from "@/components/session-title-form";
 import { SessionDescriptionForm } from "@/components/session-description-form";
-import { Actions } from "@/components/actions";
+import { SessionActions } from "@/components/session-actions";
 
 const ChapterIdPage = async ({
   params,
@@ -42,6 +42,10 @@ const ChapterIdPage = async ({
             <ArrowLeft className="h-4 w-4 mr-2" />
             Event setup
           </Link>
+          <SessionActions
+            eventId={params.eventId}
+            sessionId={params.sessionId}
+          />
           <div className="flex items-center justify-between w-full">
             <div className="flex flex-col gap-y-2">
               <h1 className="text-2-xl font-medium">Session creation</h1>
