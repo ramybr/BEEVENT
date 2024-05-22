@@ -28,6 +28,9 @@ model Event {
   isOpen Boolean @default(true)
   isMandatory Boolean @default(false)
 
+  startDate String?
+  endDate String?
+
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 

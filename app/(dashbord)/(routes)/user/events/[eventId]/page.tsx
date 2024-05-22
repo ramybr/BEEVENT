@@ -12,6 +12,7 @@ import { NextResponse } from "next/server";
 import { getUserByClerkUserId } from "@/utils/userService";
 import { SessionsForm } from "@/components/sessions-form";
 import { IconBadge } from "@/components/icon-badge";
+import { DateRangeForm } from "@/components/date-range-form";
 
 const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
   const { userId } = auth();
@@ -92,7 +93,9 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
                 value: eventType.id,
               }))}
             />
+            <DateRangeForm initialData={event} eventId={event.id} />
           </div>
+          <div></div>
           <div className=" space-y-6">
             <div>
               <div className="flex items-center gap-x-2">
