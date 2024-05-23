@@ -13,6 +13,7 @@ import { getUserByClerkUserId } from "@/utils/userService";
 import { SessionsForm } from "@/components/sessions-form";
 import { IconBadge } from "@/components/icon-badge";
 import { DateRangeForm } from "@/components/date-range-form";
+import { VisibilityForm } from "@/components/visibility-form";
 
 const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
   const { userId } = auth();
@@ -102,8 +103,8 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
                 {/* <IconBadge icon={ListChecks} /> */}
               </div>
             </div>
-
             <DateRangeForm initialData={event} eventId={event.id} />
+            <VisibilityForm initialData={event} eventId={event.id} />
           </div>
         </div>
       </div>
