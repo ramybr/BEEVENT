@@ -1,8 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { addDays, format } from "date-fns";
-import { Calendar as CalendarIcon, Pencil, PlusCircle } from "lucide-react";
+import { format, setHours, setMinutes } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { z } from "zod";
 import axios from "axios";
@@ -11,11 +10,6 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
 type DateRangeFormProps = {
@@ -32,21 +26,26 @@ const formSchema = z.object({
 });
 
 export const DateRangeForm = ({ initialData, eventId }: DateRangeFormProps) => {
-  const [isEditing, setIsEditing] = React.useState(false);
+  const defaultStartTime = setMinutes(setHours(new Date(), 8), 0); // 08:00 local time
+  const defaultEndTime = setMinutes(setHours(new Date(), 17), 0); // 17:00 local time
+
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: initialData.startDate ? new Date(initialData.startDate) : undefined,
-    to: initialData.endDate ? new Date(initialData.endDate) : undefined,
+    from: initialData.startDate
+      ? setMinutes(setHours(new Date(initialData.startDate), 8), 0)
+      : defaultStartTime,
+    to: initialData.endDate
+      ? setMinutes(setHours(new Date(initialData.endDate), 17), 0)
+      : defaultEndTime,
   });
 
-  const toggleEdit = () => setIsEditing((current) => !current);
+  const [isEditing, setIsEditing] = React.useState(false);
 
   const router = useRouter();
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.patch(`/api/events/${eventId}`, values);
-      toast.success("Event edited");
-      toggleEdit();
+      toast.success("Event dates updated");
       router.refresh();
     } catch {
       toast.error("Something went wrong");
@@ -59,87 +58,61 @@ export const DateRangeForm = ({ initialData, eventId }: DateRangeFormProps) => {
         startDate: date.from,
         endDate: date.to ?? null,
       });
+      setIsEditing(false);
     }
+  };
+
+  const handleCancel = () => {
+    setDate({
+      from: initialData.startDate
+        ? setMinutes(setHours(new Date(initialData.startDate), 8), 0)
+        : defaultStartTime,
+      to: initialData.endDate
+        ? setMinutes(setHours(new Date(initialData.endDate), 17), 0)
+        : defaultEndTime,
+    });
+    setIsEditing(false);
   };
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
-      <div className="font-medium flex items-center justify-between">
-        Event Dates
-        <Button onClick={toggleEdit} variant="ghost">
-          {isEditing && <>Cancel</>}
-          {!isEditing && !initialData.startDate && (
-            <>
-              <PlusCircle className="h-4 w-4 mr-2" />
-              Add Dates
-            </>
-          )}
-          {!isEditing && initialData.startDate && (
-            <>
-              <Pencil className="h-4 m-4 mr-2" />
-              Edit Dates
-            </>
-          )}
-        </Button>
-      </div>
-      {!isEditing && (
-        <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md">
-          {date?.from ? (
-            <div>
-              {date.to ? (
-                <>
-                  {format(date.from, "LLL dd, y")} -{" "}
-                  {format(date.to, "LLL dd, y")}
-                </>
-              ) : (
-                format(date.from, "LLL dd, y")
-              )}
-            </div>
-          ) : (
-            <span>No dates selected</span>
-          )}
-        </div>
-      )}
-      {isEditing && (
+      <div className="font-medium mb-4">Event Dates</div>
+      {isEditing ? (
         <div className="grid gap-2">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                id="date"
-                variant="outline"
-                className={cn(
-                  "w-[300px] justify-start text-left font-normal",
-                  !date && "text-muted-foreground"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {date?.from ? (
-                  date.to ? (
-                    <>
-                      {format(date.from, "LLL dd, y")} -{" "}
-                      {format(date.to, "LLL dd, y")}
-                    </>
-                  ) : (
-                    format(date.from, "LLL dd, y")
-                  )
-                ) : (
-                  <span>Pick a date</span>
-                )}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                initialFocus
-                mode="range"
-                defaultMonth={date?.from}
-                selected={date}
-                onSelect={setDate}
-                numberOfMonths={2}
-              />
-            </PopoverContent>
-          </Popover>
-          <Button onClick={handleSave} className="mt-4">
-            Save Dates
+          <div className="flex items-center gap-2">
+            <Calendar
+              className="flex-grow"
+              initialFocus
+              mode="range"
+              defaultMonth={date?.from}
+              selected={date}
+              onSelect={setDate}
+              numberOfMonths={1}
+            />
+          </div>
+          <div className="flex gap-2 mt-4">
+            <Button onClick={handleSave}>Save Date Range</Button>
+            <Button variant="secondary" onClick={handleCancel}>
+              Cancel
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="grid gap-2">
+          <div>
+            <strong>Start Date:</strong>{" "}
+            {initialData.startDate
+              ? format(new Date(initialData.startDate), "MMM dd, yyyy")
+              : "Not set"}{" "}
+          </div>
+          <div>
+            <strong>End Date:</strong>{" "}
+            {initialData.endDate
+              ? format(new Date(initialData.endDate), "MMM dd, yyyy")
+              : "Not set"}{" "}
+          </div>
+          <Button onClick={() => setIsEditing(true)} className="mt-4">
+            Edit Dates
           </Button>
         </div>
       )}
