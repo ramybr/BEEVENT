@@ -108,14 +108,31 @@ const LocationForm = ({ initialData, eventId }: LocationFormProps) => {
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Event Location
-        <Button onClick={toggleEdit} variant="ghost">
-          {isEditing ? <>Cancel</> : <>Edit</>}
-        </Button>
+        <span>Event Location</span>
+        {!isEditing && <Button onClick={toggleEdit}>Edit</Button>}
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
-          {isEditing ? (
+          <p className=" text-slate-500 text-sm ">
+            {form.getValues("location")}
+          </p>
+          <div className="h-64">
+            {typeof window !== "undefined" && markerPosition && (
+              <MapContainer
+                center={markerPosition}
+                zoom={13}
+                scrollWheelZoom={false}
+                className="h-full"
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={markerPosition} />
+              </MapContainer>
+            )}
+          </div>
+          {isEditing && (
             <>
               <FormField
                 control={form.control}
@@ -150,49 +167,13 @@ const LocationForm = ({ initialData, eventId }: LocationFormProps) => {
                   </FormItem>
                 )}
               />
-              <div className="h-64">
-                {typeof window !== "undefined" && markerPosition && (
-                  <MapContainer
-                    center={markerPosition}
-                    zoom={13}
-                    scrollWheelZoom={false}
-                    className="h-full"
-                  >
-                    <TileLayer
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    <Marker position={markerPosition} />
-                  </MapContainer>
-                )}
-              </div>
               <div className="flex items-center gap-x-2">
                 <Button disabled={!isValid || isSubmitting} type="submit">
                   Save
                 </Button>
-                <Button onClick={toggleEdit} variant="ghost">
+                <Button onClick={toggleEdit} variant="secondary">
                   Cancel
                 </Button>
-              </div>
-            </>
-          ) : (
-            <>
-              <p>{form.getValues("location")}</p>
-              <div className="h-64">
-                {typeof window !== "undefined" && markerPosition && (
-                  <MapContainer
-                    center={markerPosition}
-                    zoom={13}
-                    scrollWheelZoom={false}
-                    className="h-full"
-                  >
-                    <TileLayer
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    <Marker position={markerPosition} />
-                  </MapContainer>
-                )}
               </div>
             </>
           )}
