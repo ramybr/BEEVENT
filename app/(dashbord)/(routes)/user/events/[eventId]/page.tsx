@@ -1,3 +1,5 @@
+// /pages/events/[eventId].tsx
+
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
 import { LayoutDashboard, ListChecks } from "lucide-react";
@@ -14,6 +16,11 @@ import { SessionsForm } from "@/components/sessions-form";
 import { IconBadge } from "@/components/icon-badge";
 import { DateRangeForm } from "@/components/date-range-form";
 import { VisibilityForm } from "@/components/visibility-form";
+import dynamic from "next/dynamic";
+
+const LocationForm = dynamic(() => import("@/components/location-form"), {
+  ssr: false,
+});
 
 const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
   const { userId } = auth();
@@ -37,7 +44,6 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
       id: Number(params.eventId),
       userId: user.id,
     },
-
     include: {
       sessions: {
         orderBy: {
@@ -53,18 +59,15 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
     },
   });
 
-  console.log(eventTypes);
-
   if (!event) {
     return redirect("/");
   }
 
   return (
     <>
-      {event.isOpen && (
+      {event.isOpen ? (
         <Banner label="This event is public. It will be visible to all users." />
-      )}
-      {!event.isOpen && (
+      ) : (
         <Banner label="This event is private. It will be visible to invited participants only." />
       )}
       <div className="p-6">
@@ -72,7 +75,7 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
           <div className="flex flex-col gap-y-2">
             <h1 className="text-2xl font-medium">Event setup</h1>
             <span className="text-sm text-slate-700">
-              Complete event informations
+              Complete event information
             </span>
           </div>
           <Actions eventId={params.eventId} />
@@ -90,14 +93,10 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
                 value: eventType.id,
               }))}
             />
-
             <SessionsForm initialData={event} eventId={event.id} />
           </div>
 
-          {/* <div>
-          </div> */}
-
-          <div className=" space-y-6">
+          <div className="space-y-6">
             <div>
               <div className="flex items-center gap-x-2">
                 {/* <IconBadge icon={ListChecks} /> */}
@@ -105,6 +104,7 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
             </div>
             <DateRangeForm initialData={event} eventId={event.id} />
             <VisibilityForm initialData={event} eventId={event.id} />
+            <LocationForm initialData={event} eventId={event.id} />
           </div>
         </div>
       </div>

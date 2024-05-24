@@ -75,3 +75,8 @@
   }
 }
 @import "~@uploadthing/react/styles.css";
+
+/* .leaflet-container {
+  height: 400px;
+  width: 100%;
+} */
