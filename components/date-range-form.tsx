@@ -91,7 +91,7 @@ export const DateRangeForm = ({ initialData, eventId }: DateRangeFormProps) => {
             />
           </div>
           <div className="flex gap-2 mt-4">
-            <Button onClick={handleSave}>Save Date Range</Button>
+            <Button onClick={handleSave}>Save Dates</Button>
             <Button variant="secondary" onClick={handleCancel}>
               Cancel
             </Button>
