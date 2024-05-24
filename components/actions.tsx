@@ -8,25 +8,27 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { ConfirmModal } from "@/components/modals/confirm-modal";
-// import { useConfettiStore } from "@/hooks/use-confetti-store";
 
 interface ActionsProps {
-  // disabled: boolean;
   eventId: number;
-  // isPublished: boolean;
+  isPublished: boolean;
 }
 
-export const Actions = ({ eventId }: ActionsProps) => {
+export const Actions = ({ eventId, isPublished }: ActionsProps) => {
   const router = useRouter();
-  // const confetti = useConfettiStore();
   const [isLoading, setIsLoading] = useState(false);
 
   const onClick = async () => {
     try {
       setIsLoading(true);
-      await axios.patch(`/api/events/${eventId}/publish`);
-      toast.success("Event published");
-      // confetti.onOpen();
+
+      if (isPublished) {
+        await axios.patch(`/api/events/${eventId}/unpublish`);
+        toast.success("Event unpublished");
+      } else {
+        await axios.patch(`/api/events/${eventId}/publish`);
+        toast.success("Event published");
+      }
       router.refresh();
     } catch {
       toast.error("Something went wrong");
@@ -55,11 +57,11 @@ export const Actions = ({ eventId }: ActionsProps) => {
     <div className="flex items-center gap-x-2">
       <Button
         onClick={onClick}
-        // disabled={disabled || isLoading}
+        disabled={isLoading}
         variant="outline"
         size="sm"
       >
-        {/* {isPublished ? "Unpublish" : "Publish"} */}
+        {isPublished ? "Unpublish" : "Publish"}
       </Button>
       <ConfirmModal onConfirm={onDelete}>
         <Button size="sm" disabled={isLoading}>
