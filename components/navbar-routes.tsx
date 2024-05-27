@@ -10,8 +10,8 @@ import { SearchInput } from "./search-input";
 export const NavbarRoutes = () => {
   const pathname = usePathname();
 
-  const isTeacherPage = pathname?.startsWith("/teacher");
-  const isCoursePage = pathname?.includes("/courses");
+  const isUserPage = pathname?.startsWith("/user");
+  const isEventPage = pathname?.includes("/events");
   const isSearchPage = pathname === "/search";
 
   return (
@@ -22,17 +22,17 @@ export const NavbarRoutes = () => {
         </div>
       )}
       <div className="flex gap-x-2 ml-auto">
-        {isTeacherPage || isCoursePage ? (
+        {isUserPage || isEventPage ? (
           <Link href="/">
             <Button size="sm" variant="ghost">
               <LogOut className="h-4 mr-2 w-4" />
-              Exit
+              Back
             </Button>
           </Link>
         ) : (
-          <Link href="/teacher/courses">
+          <Link href="/user/create">
             <Button size="sm" variant="ghost">
-              Teacher Mode
+              Create your event
             </Button>
           </Link>
         )}

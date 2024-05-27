@@ -43,11 +43,12 @@ model Event {
 
 }
 
-enum Type {
-  WORKSHOP
-  TRAINING
-  OTHER
+model EventType {
+  id Int @id @default(autoincrement())
+  name String @unique
+  events Event[]
 }
+
 
 enum EventStatus {
   UPCOMING
@@ -158,11 +159,6 @@ enum ActivitySector {
   OTHER
 }
 
-model EventType {
-  id Int @id @default(autoincrement())
-  name String @unique
-  events Event[]
-}
 
 
  
