@@ -34,6 +34,9 @@ const EventsPage = async () => {
 
   return (
     <div className="p-6">
+      <span>
+        <h1 className="text-2xl">{user.firstName}'s events</h1>
+      </span>
       <DataTable columns={columns} data={events} />
     </div>
   );
