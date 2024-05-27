@@ -17,7 +17,7 @@ const EventLayout = async ({
   }
   const event = await db.event.findUnique({
     where: {
-      id: params.eventId,
+      id: Number(params.eventId),
     },
     include: {
       sessions: {

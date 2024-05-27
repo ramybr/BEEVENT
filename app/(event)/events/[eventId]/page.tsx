@@ -12,6 +12,7 @@ import { NextResponse } from "next/server";
 import { getUserByClerkUserId } from "@/utils/userService";
 import { SessionsForm } from "@/components/sessions-form";
 import { IconBadge } from "@/components/icon-badge";
+import LocationForm from "@/components/location-form";
 
 const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
   const { userId } = auth();
@@ -97,7 +98,8 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
                 <IconBadge icon={ListChecks} />
                 <h2 className="text-xl">Event sessions</h2>
               </div>
-              {/* <SessionsForm initialData={event} eventId={event.id} /> */}
+              <SessionsForm initialData={event} eventId={event.id} />
+              <LocationForm initialData={event} eventId={event.id} />
             </div>
           </div>
         </div>
