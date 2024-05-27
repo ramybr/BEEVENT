@@ -12,9 +12,9 @@ type EventsListProps = {
 
 export const EventsList = ({ items }: EventsListProps) => {
   return (
-    <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4">
-      <div>
-        {items.map((item) => (
+    <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
+      {items.map((item) => (
+        <div className="hover:scale-105 transition">
           <EventCard
             key={item.id}
             id={item.id}
@@ -23,11 +23,12 @@ export const EventsList = ({ items }: EventsListProps) => {
             sessionsLength={item.sessions.length}
             category={item?.category?.name!}
           />
-        ))}
-      </div>
+        </div>
+      ))}
+
       {items.length === 0 && (
         <div className="text-center text-sm text-muted-foreground mt-10">
-          No courses found
+          No events found
         </div>
       )}
     </div>
