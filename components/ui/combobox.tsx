@@ -126,7 +126,7 @@ export const Combobox = ({ options, value, onChange }: ComboboxProps) => {
       <PopoverContent className="w-full p-0">
         <Command>
           <CommandInput placeholder="Search option..." />
-          <CommandEmpty>No option found.</CommandEmpty>
+          <CommandEmpty>No options found.</CommandEmpty>
           <CommandGroup>
             {options &&
               options?.map((option) => (
