@@ -1,36 +1,37 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 
-type categoryItemProp = {
+type CategoryItemProp = {
   label: string;
   value?: number;
 };
 
-export const CategoryItem = ({ label, value }: categoryItemProp) => {
+export const CategoryItem = ({ label, value }: CategoryItemProp) => {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const currentCategoryId = searchParams.get("eventTypeId");
+  const currentCategoryId = searchParams.get("categoryId");
   const currentTitle = searchParams.get("title");
 
-  const isSelected = currentCategoryId === value?.toString();
+  const isSelected = Number(currentCategoryId) === value;
 
   const onClick = () => {
+    const newQuery = {
+      title: currentTitle,
+      categoryId: isSelected ? undefined : value,
+    };
     const url = qs.stringifyUrl(
       {
         url: pathname,
-        query: {
-          title: currentTitle,
-          categoryId: isSelected ? null : value,
-        },
+        query: newQuery,
       },
       { skipNull: true, skipEmptyString: true }
     );
+    console.log(currentTitle);
     router.push(url);
   };
 

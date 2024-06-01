@@ -9,13 +9,13 @@ type EventWithCategory = Event & {
 type GetEvents = {
   userId: number | undefined;
   title?: string;
-  eventTypeId?: number;
+  categoryId?: number;
 };
 
 export const getEvents = async ({
   userId,
   title,
-  eventTypeId,
+  categoryId,
 }: GetEvents): Promise<EventWithCategory[]> => {
   try {
     const events = await db.event.findMany({
@@ -24,6 +24,7 @@ export const getEvents = async ({
         name: {
           contains: title,
         },
+        eventTypeId: Number(categoryId) || undefined,
       },
       include: {
         eventType: true,

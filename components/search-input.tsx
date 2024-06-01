@@ -18,6 +18,10 @@ export const SearchInput = () => {
   const currentCategoryId = searchParams.get("categoryId");
 
   useEffect(() => {
+    console.log(
+      `Fetching events for categoryId: ${currentCategoryId} and title: ${debouncedValue}`
+    );
+
     const url = qs.stringifyUrl(
       {
         url: pathname,
@@ -29,7 +33,7 @@ export const SearchInput = () => {
       { skipNull: true, skipEmptyString: true }
     );
     router.push(url);
-  }, [debouncedValue, currentCategoryId, pathname, router]);
+  }, [debouncedValue, currentCategoryId, router, pathname]);
 
   return (
     <div className="relative">

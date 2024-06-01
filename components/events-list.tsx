@@ -14,9 +14,8 @@ export const EventsList = ({ items }: EventsListProps) => {
   return (
     <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
       {items.map((item) => (
-        <div className="hover:scale-105 transition">
+        <div key={item.id} className="hover:scale-105 transition">
           <EventCard
-            key={item.id}
             id={item.id}
             name={item.name}
             imageUrl={item.imageUrl!}

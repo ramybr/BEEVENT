@@ -19,17 +19,6 @@ export async function DELETE(
       },
     });
 
-    const ownEvent = await db.event.findUnique({
-      where: {
-        id: Number(params.eventId),
-        userId: user?.id,
-      },
-    });
-
-    // if (!event) {
-    //   return new NextResponse("Not Found", { status: 404 });
-    // }
-
     const deletedEvent = await db.event.delete({
       where: {
         id: Number(params.eventId),
@@ -64,7 +53,7 @@ export async function PATCH(
 
     const event = await db.event.update({
       where: {
-        id: eventId,
+        id: Number(params.eventId),
         userId: user?.id,
       },
       data: {
