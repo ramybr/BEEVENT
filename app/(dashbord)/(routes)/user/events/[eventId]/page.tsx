@@ -45,7 +45,7 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
     include: {
       sessions: {
         orderBy: {
-          createdAt: "asc",
+          position: "asc",
         },
       },
     },

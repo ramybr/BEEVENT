@@ -20,7 +20,6 @@ import { cn } from "@/lib/utils";
 import { Session, Event } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { SessionsList } from "./sessions-list";
-import { SessionTimeForm } from "./session-time-form";
 
 type SessionsFormProps = {
   initialData: Event & { sessions: Session[] };

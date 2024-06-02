@@ -37,20 +37,21 @@ export const SessionsList = ({
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
 
-    const items = Array.from(sessions);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
+    const reorderedSessions = Array.from(sessions);
+    const [movedSession] = reorderedSessions.splice(result.source.index, 1);
+    reorderedSessions.splice(result.destination.index, 0, movedSession);
 
-    const startIndex = Math.min(result.source.index, result.destination.index);
-    const endIndex = Math.max(result.source.index, result.destination.index);
+    // Update the position attribute based on the new order, starting from 1
+    const updatedSessions = reorderedSessions.map((session, index) => ({
+      ...session,
+      position: index + 1,
+    }));
 
-    const updatedSessions = items.slice(startIndex, endIndex + 1);
-
-    setSessions(items);
+    setSessions(updatedSessions);
 
     const bulkUpdateData = updatedSessions.map((session) => ({
       id: session.id,
-      position: items.findIndex((item) => item.id === session.id),
+      position: session.position,
     }));
 
     onReorder(bulkUpdateData);
@@ -74,15 +75,14 @@ export const SessionsList = ({
                 {(provided) => (
                   <div
                     className={cn(
-                      "flex items-center gap-x-2 bg-slate-200 border-slate-200 border text-slate-700 rounded-md mb-4 text-sm",
-                      "bg-sky-100 border-sky-200 text-sky-700"
+                      "flex items-center gap-x-2 bg-slate-200 border-slate-200 border text-slate-700 rounded-md mb-4 text-sm"
                     )}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                   >
                     <div
                       className={cn(
-                        "px-2 py3 border-r border-r-slate-200 hover:bg-slate-300 rounded-l-md transition"
+                        "px-2 py-3 border-r border-r-slate-200 hover:bg-slate-300 rounded-l-md transition"
                       )}
                       {...provided.dragHandleProps}
                     >
