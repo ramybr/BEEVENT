@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { SessionTitleForm } from "@/components/session-title-form";
 import { SessionDescriptionForm } from "@/components/session-description-form";
 import { SessionActions } from "@/components/session-actions";
+import { SessionTimeForm } from "@/components/session-time-form";
 
 const ChapterIdPage = async ({
   params,
@@ -70,13 +71,18 @@ const ChapterIdPage = async ({
               eventId={params.eventId}
               sessionId={params.sessionId}
             />
+            <SessionTimeForm
+              initialData={session}
+              eventId={params.eventId}
+              sessionId={params.sessionId}
+            />
           </div>
-          <div>
+          {/* <div>
             <div className="flex items-center gap-x-2">
               <IconBadge icon={Eye} />
               <h2 className="text-xl">Access Settings</h2>
             </div>
-          </div>
+          </div> */}
         </div>
         <div></div>
       </div>

@@ -11,7 +11,7 @@ import { Banner } from "@/components/banner";
 import { Actions } from "@/components/actions";
 import { NextResponse } from "next/server";
 import { SessionsForm } from "@/components/sessions-form";
-import { DateRangeForm } from "@/components/date-range-form";
+import { DateRangeForm } from "@/components/event-date-form";
 import { VisibilityForm } from "@/components/visibility-form";
 import dynamic from "next/dynamic";
 
