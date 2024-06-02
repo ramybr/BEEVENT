@@ -119,7 +119,9 @@ model Session {
 
   attendaces Attendance[]
 
-  date DateTime @default(now())
+  sessionStart String? 
+  sessionEnd String? 
+
   imageUrl String? @db.Text
   description String? @db.Text
 
