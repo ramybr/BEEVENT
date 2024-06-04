@@ -24,6 +24,7 @@ type SessionDescriptionFormProps = {
   initialData: Session;
   eventId: number;
   sessionId: number;
+  editable: boolean; // Add editable prop
 };
 
 const formSchema = z.object({
@@ -34,6 +35,7 @@ export const SessionDescriptionForm = ({
   initialData,
   eventId,
   sessionId,
+  editable,
 }: SessionDescriptionFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
@@ -60,6 +62,19 @@ export const SessionDescriptionForm = ({
       toast.error("Something went wrong");
     }
   };
+
+  if (!editable) {
+    return (
+      <p
+        className={cn(
+          "text-sm mt-2",
+          !initialData.description && "text-slate-500 italic"
+        )}
+      >
+        {initialData.description || "No description"}
+      </p>
+    );
+  }
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">

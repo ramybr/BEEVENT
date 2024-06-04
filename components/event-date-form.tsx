@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
 
 type DateRangeFormProps = {
   initialData: {
@@ -18,6 +17,7 @@ type DateRangeFormProps = {
     endDate: string | null;
   };
   eventId: number;
+  editable: boolean; // Add editable prop
 };
 
 const formSchema = z.object({
@@ -25,7 +25,11 @@ const formSchema = z.object({
   endDate: z.date().nullable(),
 });
 
-export const DateRangeForm = ({ initialData, eventId }: DateRangeFormProps) => {
+export const DateRangeForm = ({
+  initialData,
+  eventId,
+  editable,
+}: DateRangeFormProps) => {
   const defaultStartTime = setMinutes(setHours(new Date(), 8), 0); // 08:00 local time
   const defaultEndTime = setMinutes(setHours(new Date(), 17), 0); // 17:00 local time
 
@@ -73,6 +77,28 @@ export const DateRangeForm = ({ initialData, eventId }: DateRangeFormProps) => {
     });
     setIsEditing(false);
   };
+
+  if (!editable) {
+    return (
+      <div className="mt-6 border bg-slate-100 rounded-md p-4">
+        <div className="font-medium mb-4">Event Dates</div>
+        <div className="grid gap-2">
+          <div>
+            <strong>Start Date:</strong>{" "}
+            {initialData.startDate
+              ? format(new Date(initialData.startDate), "MMM dd, yyyy")
+              : "Not set"}{" "}
+          </div>
+          <div>
+            <strong>End Date:</strong>{" "}
+            {initialData.endDate
+              ? format(new Date(initialData.endDate), "MMM dd, yyyy")
+              : "Not set"}{" "}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">

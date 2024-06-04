@@ -3,6 +3,10 @@ import Link from "next/link";
 import { BookOpen } from "lucide-react";
 
 import { IconBadge } from "@/components/icon-badge";
+import { NextResponse } from "next/server";
+import { redirect } from "next/navigation";
+import { auth } from "@clerk/nextjs";
+import { db } from "@/lib/db";
 
 interface EventCardProps {
   id: number;
@@ -12,13 +16,29 @@ interface EventCardProps {
   category: string;
 }
 
-export const EventCard = ({
+export const EventCard = async ({
   id,
   name,
   imageUrl,
   sessionsLength,
   category,
 }: EventCardProps) => {
+  const { userId } = auth();
+
+  if (!userId) {
+    return redirect("/");
+  }
+
+  const user = await db.user.findUnique({
+    where: {
+      clerkId: userId,
+    },
+  });
+
+  if (!user) {
+    return new NextResponse("User not found", { status: 404 });
+  }
+
   return (
     <Link href={`/events/${id}`}>
       <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-auto">

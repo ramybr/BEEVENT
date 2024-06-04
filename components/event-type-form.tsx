@@ -23,6 +23,7 @@ type EventTypeFormProps = {
   initialData: Event;
   eventId: number;
   options: { label: string; value: number }[];
+  editable: boolean;
 };
 
 const formSchema = z.object({
@@ -33,6 +34,7 @@ export const EventTypeForm = ({
   initialData,
   eventId,
   options,
+  editable,
 }: EventTypeFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
@@ -65,56 +67,68 @@ export const EventTypeForm = ({
   );
 
   return (
-    <div className="mt-6 border bg-slate-100 rounded-md p-4">
-      <div className="font-medium flex items-center justify-between">
-        Event Type
-        <Button onClick={toggleEdit} variant="ghost">
-          {isEditing ? (
-            <>Cancel</>
-          ) : (
-            <>
-              <Pencil className="h-4 m-4 mr-2" />
-              Edit
-            </>
-          )}
-        </Button>
-      </div>
-      {!isEditing && (
-        <p
-          className={cn(
-            "text-sm mt-2",
-            !initialData.eventTypeId && "text-slate-500 italic"
-          )}
-        >
-          {selectedOption?.label || "No event type selected"}
-        </p>
-      )}
-      {isEditing && (
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mt-4"
-          >
-            <FormField
-              control={form.control}
-              name="eventTypeId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Combobox options={options} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+    <>
+      {editable && (
+        <div className="mt-6 border bg-slate-100 rounded-md p-4">
+          <div className="font-medium flex items-center justify-between">
+            Event Type
+            <Button onClick={toggleEdit} variant="ghost">
+              {isEditing ? (
+                <>Cancel</>
+              ) : (
+                <>
+                  <Pencil className="h-4 m-4 mr-2" />
+                  Edit
+                </>
               )}
-            />
-            <div className="flex items-center gap-x-2">
-              <Button disabled={!isValid || isSubmitting} type="submit">
-                Save
-              </Button>
-            </div>
-          </form>
-        </Form>
+            </Button>
+          </div>
+          {!isEditing && (
+            <p
+              className={cn(
+                "text-sm mt-2",
+                !initialData.eventTypeId && "text-slate-500 italic"
+              )}
+            >
+              {selectedOption?.label || "No event type selected"}
+            </p>
+          )}
+          {isEditing && (
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4 mt-4"
+              >
+                <FormField
+                  control={form.control}
+                  name="eventTypeId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Combobox options={options} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex items-center gap-x-2">
+                  <Button disabled={!isValid || isSubmitting} type="submit">
+                    Save
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          )}
+        </div>
       )}
-    </div>
+      {!editable && (
+        <div className="mt-6 border bg-slate-100 rounded-md p-4">
+          <p className="font-medium flex items-center justify-between">
+            Event Type
+          </p>
+          {selectedOption?.label || "No event type selected"}
+        </div>
+      )}
+    </>
   );
 };

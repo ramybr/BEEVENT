@@ -14,14 +14,16 @@ import { Grip, Pencil } from "lucide-react";
 
 type SessionsListProps = {
   items: Session[];
-  onReorder: (updateData: { id: number; position: number }[]) => void;
-  onEdit: (id: number) => void;
+  onReorder?: (updateData: { id: number; position: number }[]) => void; // Make optional
+  onEdit?: (id: number) => void; // Make optional
+  editable: boolean; // Add editable prop
 };
 
 export const SessionsList = ({
   items,
   onReorder,
   onEdit,
+  editable,
 }: SessionsListProps) => {
   const [isMounted, setIsMounted] = useState(false);
   const [sessions, setSessions] = useState(items);
@@ -54,7 +56,7 @@ export const SessionsList = ({
       position: session.position,
     }));
 
-    onReorder(bulkUpdateData);
+    onReorder?.(bulkUpdateData); // Call onReorder only if it is defined
   };
 
   if (!isMounted) {
@@ -71,6 +73,7 @@ export const SessionsList = ({
                 key={session.id}
                 draggableId={session.id.toString()}
                 index={index}
+                isDragDisabled={!editable} // Disable dragging if not editable
               >
                 {(provided) => (
                   <div
@@ -80,21 +83,25 @@ export const SessionsList = ({
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                   >
-                    <div
-                      className={cn(
-                        "px-2 py-3 border-r border-r-slate-200 hover:bg-slate-300 rounded-l-md transition"
-                      )}
-                      {...provided.dragHandleProps}
-                    >
-                      <Grip className="h-5 w-5" />
-                    </div>
+                    {editable && (
+                      <div
+                        className={cn(
+                          "px-2 py-3 border-r border-r-slate-200 hover:bg-slate-300 rounded-l-md transition"
+                        )}
+                        {...provided.dragHandleProps}
+                      >
+                        <Grip className="h-5 w-5" />
+                      </div>
+                    )}
                     {session.title}
-                    <div className="ml-auto pr-2 flex items-center gap-x-2">
-                      <Pencil
-                        onClick={() => onEdit(session.id)}
-                        className="w-4 h-4 cursor-pointer hover:opacity-75 transition"
-                      />
-                    </div>
+                    {editable && (
+                      <div className="ml-auto pr-2 flex items-center gap-x-2">
+                        <Pencil
+                          onClick={() => onEdit?.(session.id)}
+                          className="w-4 h-4 cursor-pointer hover:opacity-75 transition"
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
               </Draggable>

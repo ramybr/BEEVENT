@@ -21,6 +21,7 @@ type SessionTimeFormProps = {
   };
   eventId: number;
   sessionId: number;
+  editable: boolean; // Add editable prop
 };
 
 const formSchema = z.object({
@@ -32,6 +33,7 @@ export const SessionTimeForm = ({
   initialData,
   eventId,
   sessionId,
+  editable,
 }: SessionTimeFormProps) => {
   const defaultStartTime = setSeconds(
     setMinutes(setHours(new Date(), 8), 0),
@@ -125,6 +127,25 @@ export const SessionTimeForm = ({
     }
   };
 
+  if (!editable) {
+    return (
+      <div className="grid gap-2">
+        <div>
+          <strong>Session Start:</strong>{" "}
+          {initialData.sessionStart
+            ? format(new Date(initialData.sessionStart), "MMM dd, yyyy HH:mm")
+            : "Not set"}
+        </div>
+        <div>
+          <strong>Session End:</strong>{" "}
+          {initialData.sessionEnd
+            ? format(new Date(initialData.sessionEnd), "MMM dd, yyyy HH:mm")
+            : "Not set"}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-lg mx-auto mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium mb-4">Event Dates</div>
@@ -171,13 +192,13 @@ export const SessionTimeForm = ({
             <strong>Session Start:</strong>{" "}
             {initialData.sessionStart
               ? format(new Date(initialData.sessionStart), "MMM dd, yyyy HH:mm")
-              : "Not set"}{" "}
+              : "Not set"}
           </div>
           <div>
             <strong>Session End:</strong>{" "}
             {initialData.sessionEnd
               ? format(new Date(initialData.sessionEnd), "MMM dd, yyyy HH:mm")
-              : "Not set"}{" "}
+              : "Not set"}
           </div>
           <Button onClick={() => setIsEditing(true)} className="mt-4">
             Edit Dates

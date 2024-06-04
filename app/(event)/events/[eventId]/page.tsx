@@ -2,41 +2,31 @@ import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
 import { ListChecks } from "lucide-react";
 import { redirect } from "next/navigation";
-import { TitleForm } from "@/components/title-form";
-import { DescriptionForm } from "@/components/description-form";
-import { ImageForm } from "@/components/image-form";
-import { EventTypeForm } from "@/components/event-type-form";
 import { Banner } from "@/components/banner";
-import { Actions } from "@/components/actions";
-import { NextResponse } from "next/server";
-import { getUserByClerkUserId } from "@/utils/userService";
 import { SessionsForm } from "@/components/sessions-form";
 import { IconBadge } from "@/components/icon-badge";
 import LocationForm from "@/components/location-form";
+import { ImageForm } from "@/components/image-form";
+import { TitleForm } from "@/components/title-form";
+import { DescriptionForm } from "@/components/description-form";
+import { EventTypeForm } from "@/components/event-type-form";
+import { Actions } from "@/components/actions";
+import { NextResponse } from "next/server";
+import { DateRangeForm } from "@/components/event-date-form";
 
-const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
+const EventPage = async ({ params }: { params: { eventId: number } }) => {
   const { userId } = auth();
-
-  if (!userId) {
-    return redirect("/");
-  }
 
   const user = await db.user.findUnique({
     where: {
-      clerkId: userId,
+      clerkId: userId || undefined,
     },
   });
-
-  if (!user) {
-    return new NextResponse("User not found", { status: 404 });
-  }
 
   const event = await db.event.findUnique({
     where: {
       id: Number(params.eventId),
-      userId: user.id,
     },
-
     include: {
       sessions: {
         orderBy: {
@@ -46,60 +36,100 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
     },
   });
 
+  if (!event) {
+    return redirect("/");
+  }
+
   const eventTypes = await db.eventType.findMany({
     orderBy: {
       name: "asc",
     },
   });
 
-  if (!event) {
-    return redirect("/");
-  }
+  const isEventCreator = event.userId === user?.id;
 
   return (
     <>
-      {event.isOpen && (
-        <Banner label="This event is public. It will be visible to all users." />
+      {!isEventCreator && (
+        <ImageForm initialData={event} eventId={event.id} editable={false} />
       )}
-      {!event.isOpen && (
-        <Banner label="This event is private. It will be visible to invited participants only." />
-      )}
-      <div className="p-6">
+      <div className={`p-6 ${!isEventCreator ? "mt-6" : ""}`}>
+        {isEventCreator && (
+          <>
+            {event.isOpen && (
+              <Banner label="This event is public. It will be visible to all users." />
+            )}
+            {!event.isOpen && (
+              <Banner label="This event is private. It will be visible to invited participants only." />
+            )}
+          </>
+        )}
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-y-2">
-            <h1 className="text-2xl font-medium">Event setup</h1>
-            <span className="text-sm text-slate-700">
-              Complete event informations
-            </span>
+            <h1 className="text-2xl font-medium">{event.name}</h1>
+            <span className="text-sm text-slate-700">{event.description}</span>
           </div>
-          <Actions eventId={params.eventId} isPublished={event.isPublished} />
+          {isEventCreator && (
+            <Actions eventId={params.eventId} isPublished={event.isPublished} />
+          )}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
-          <div>
-            <div className="flex items-center gap-x-2">
-              {/* <IconBadge icon={LayoutDashboard} /> */}
-              <h2 className="text-xl">Customize your event</h2>
-            </div>
-            <TitleForm initialData={event} eventId={event.id} />
-            <DescriptionForm initialData={event} eventId={event.id} />
-            <ImageForm initialData={event} eventId={event.id} />
-            <EventTypeForm
-              initialData={event}
-              eventId={event.id}
-              options={eventTypes.map((eventType) => ({
-                label: eventType.name,
-                value: eventType.id,
-              }))}
-            />
+        <div className="grid grid-cols-2 md:grid-cols-2 gap-6 mt-16">
+          <div className="p-6 flex justify-center">
+            {isEventCreator && (
+              <>
+                <div className="flex items-center gap-x-2">
+                  <h2 className="text-xl">Customize your event</h2>
+                </div>
+                <TitleForm
+                  initialData={event}
+                  eventId={event.id}
+                  editable={isEventCreator}
+                />
+                <DescriptionForm
+                  initialData={event}
+                  eventId={event.id}
+                  editable={isEventCreator}
+                />
+                <ImageForm
+                  initialData={event}
+                  eventId={event.id}
+                  editable={isEventCreator}
+                />
+              </>
+            )}
           </div>
-          <div className=" space-y-6">
+          <div className="space-y-6">
             <div>
-              <div className="flex items-center gap-x-2">
-                <IconBadge icon={ListChecks} />
-                <h2 className="text-xl">Event sessions</h2>
-              </div>
-              <SessionsForm initialData={event} eventId={event.id} />
-              <LocationForm initialData={event} eventId={event.id} />
+              <SessionsForm
+                initialData={event}
+                eventId={event.id}
+                editable={isEventCreator}
+              />
+            </div>
+            <div className="space-y-6">
+              <EventTypeForm
+                initialData={event}
+                eventId={event.id}
+                options={eventTypes.map((eventType) => ({
+                  label: eventType.name,
+                  value: eventType.id,
+                }))}
+                editable={isEventCreator}
+              />
+            </div>
+            <div className="space-y-6">
+              <LocationForm
+                initialData={event}
+                eventId={event.id}
+                editable={isEventCreator}
+              />
+            </div>
+            <div className="space-y-6">
+              <DateRangeForm
+                initialData={event}
+                eventId={event.id}
+                editable={isEventCreator}
+              />
             </div>
           </div>
         </div>
@@ -108,4 +138,4 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
   );
 };
 
-export default EventIdPage;
+export default EventPage;

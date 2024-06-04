@@ -81,9 +81,21 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
             <div className="space-y-6">
-              <TitleForm initialData={event} eventId={event.id} />
-              <DescriptionForm initialData={event} eventId={event.id} />
-              <ImageForm initialData={event} eventId={event.id} />
+              <TitleForm
+                initialData={event}
+                eventId={event.id}
+                editable={true}
+              />
+              <DescriptionForm
+                initialData={event}
+                eventId={event.id}
+                editable={true}
+              />
+              <ImageForm
+                initialData={event}
+                eventId={event.id}
+                editable={true}
+              />
               <EventTypeForm
                 initialData={event}
                 eventId={event.id}
@@ -91,14 +103,27 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
                   label: eventType.name,
                   value: eventType.id,
                 }))}
+                editable={true}
               />
-              <SessionsForm initialData={event} eventId={event.id} />
+              <SessionsForm
+                initialData={event}
+                eventId={event.id}
+                editable={true}
+              />
             </div>
 
             <div className="space-y-6">
-              <DateRangeForm initialData={event} eventId={event.id} />
+              <DateRangeForm
+                initialData={event}
+                eventId={event.id}
+                editable={true}
+              />
               <VisibilityForm initialData={event} eventId={event.id} />
-              <LocationForm initialData={event} eventId={event.id} />
+              <LocationForm
+                initialData={event}
+                eventId={event.id}
+                editable={true}
+              />
             </div>
           </div>
         </div>

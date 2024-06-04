@@ -1,8 +1,5 @@
-// /components/location-form.tsx
-
 "use client";
 
-import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -19,7 +16,6 @@ import {
 } from "@/components/ui/form";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
@@ -32,6 +28,7 @@ const formSchema = z.object({
 type LocationFormProps = {
   initialData: Event;
   eventId: number;
+  editable: boolean;
 };
 
 interface Suggestion {
@@ -40,7 +37,11 @@ interface Suggestion {
   lon: string;
 }
 
-const LocationForm = ({ initialData, eventId }: LocationFormProps) => {
+const LocationForm = ({
+  initialData,
+  eventId,
+  editable,
+}: LocationFormProps) => {
   const [markerPosition, setMarkerPosition] = useState<[number, number] | null>(
     null
   );
@@ -48,7 +49,6 @@ const LocationForm = ({ initialData, eventId }: LocationFormProps) => {
     []
   );
   const [isEditing, setIsEditing] = useState(false);
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -79,7 +79,7 @@ const LocationForm = ({ initialData, eventId }: LocationFormProps) => {
       await axios.patch(`/api/events/${eventId}`, values);
       toast.success("Event location updated");
       setIsEditing(false);
-      router.refresh();
+      // You might need to update initialData.location here if needed
     } catch {
       toast.error("Something went wrong");
     }
@@ -109,7 +109,7 @@ const LocationForm = ({ initialData, eventId }: LocationFormProps) => {
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
         <span>Event Location</span>
-        {!isEditing && <Button onClick={toggleEdit}>Edit</Button>}
+        {editable && !isEditing && <Button onClick={toggleEdit}>Edit</Button>}
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
@@ -132,7 +132,7 @@ const LocationForm = ({ initialData, eventId }: LocationFormProps) => {
               </MapContainer>
             )}
           </div>
-          {isEditing && (
+          {editable && isEditing && (
             <>
               <FormField
                 control={form.control}
@@ -183,4 +183,4 @@ const LocationForm = ({ initialData, eventId }: LocationFormProps) => {
   );
 };
 
-export default dynamic(() => Promise.resolve(LocationForm), { ssr: false });
+export default LocationForm;

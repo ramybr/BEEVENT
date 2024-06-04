@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Loader2, Pencil, PlusCircle } from "lucide-react";
+import { Loader2, PlusCircle } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -20,17 +20,24 @@ import { cn } from "@/lib/utils";
 import { Session, Event } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { SessionsList } from "./sessions-list";
+import { SessionDescriptionForm } from "./session-description-form";
+import { SessionTimeForm } from "./session-time-form";
 
 type SessionsFormProps = {
   initialData: Event & { sessions: Session[] };
   eventId: number;
+  editable: boolean; // Add editable prop
 };
 
 const formSchema = z.object({
   title: z.string().min(1),
 });
 
-export const SessionsForm = ({ initialData, eventId }: SessionsFormProps) => {
+export const SessionsForm = ({
+  initialData,
+  eventId,
+  editable,
+}: SessionsFormProps) => {
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -89,18 +96,20 @@ export const SessionsForm = ({ initialData, eventId }: SessionsFormProps) => {
       )}
       <div className="font-medium flex items-center justify-between">
         Event sessions
-        <Button onClick={toggleCreating} variant="ghost">
-          {isCreating ? (
-            <>Cancel</>
-          ) : (
-            <>
-              <PlusCircle className="h-4 m-4 mr-2" />
-              Add session
-            </>
-          )}
-        </Button>
+        {editable && (
+          <Button onClick={toggleCreating} variant="ghost">
+            {isCreating ? (
+              <>Cancel</>
+            ) : (
+              <>
+                <PlusCircle className="h-4 m-4 mr-2" />
+                Add session
+              </>
+            )}
+          </Button>
+        )}
       </div>
-      {isCreating && (
+      {isCreating && editable && (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -122,8 +131,6 @@ export const SessionsForm = ({ initialData, eventId }: SessionsFormProps) => {
                 </FormItem>
               )}
             />
-            {/* <SessionTimeForm initialData={initialData}/> */}
-
             <Button disabled={!isValid || isSubmitting} type="submit">
               Create
             </Button>
@@ -139,12 +146,37 @@ export const SessionsForm = ({ initialData, eventId }: SessionsFormProps) => {
         >
           {!initialData.sessions.length && "No sessions"}
           <SessionsList
-            onEdit={onEdit}
-            onReorder={onReorder}
+            onEdit={editable ? onEdit : undefined}
+            onReorder={editable ? onReorder : undefined}
             items={initialData.sessions || []}
+            editable={editable} // Pass editable prop to SessionsList
           />
         </div>
       )}
+      {!editable &&
+        initialData.sessions.map((session) => (
+          <div
+            key={session.id}
+            className="mt-6 border bg-slate-100 rounded-md p-4"
+          >
+            <h3 className="font-medium">Session: {session.title}</h3>
+            <SessionDescriptionForm
+              initialData={session}
+              eventId={eventId}
+              sessionId={session.id}
+              editable={false} // Set to false to render read-only
+            />
+            <SessionTimeForm
+              initialData={{
+                sessionStart: session.sessionStart,
+                sessionEnd: session.sessionEnd,
+              }}
+              eventId={eventId}
+              sessionId={session.id}
+              editable={false} // Set to false to render read-only
+            />
+          </div>
+        ))}
     </div>
   );
 };
