@@ -77,7 +77,12 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
                 Complete event information
               </span>
             </div>
-            <Actions eventId={params.eventId} isPublished={event.isPublished} />
+            <Actions
+              eventId={params.eventId}
+              isPublished={event.isPublished}
+              isEventCreator={true}
+              isParticipating={true}
+            />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
             <div className="space-y-6">
