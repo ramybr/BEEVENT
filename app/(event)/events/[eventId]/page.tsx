@@ -23,6 +23,10 @@ const EventPage = async ({ params }: { params: { eventId: number } }) => {
     },
   });
 
+  if (!user) {
+    return redirect("/");
+  }
+
   const event = await db.event.findUnique({
     where: {
       id: Number(params.eventId),
@@ -46,90 +50,107 @@ const EventPage = async ({ params }: { params: { eventId: number } }) => {
     },
   });
 
-  const isEventCreator = event.userId === user?.id;
+  const isEventCreator = event.userId === user.id;
 
   return (
     <>
-      {!isEventCreator && (
-        <ImageForm initialData={event} eventId={event.id} editable={false} />
-      )}
-      <div className={`p-6 ${!isEventCreator ? "mt-6" : ""}`}>
-        {isEventCreator && (
-          <>
-            {event.isOpen && (
-              <Banner label="This event is public. It will be visible to all users." />
-            )}
-            {!event.isOpen && (
-              <Banner label="This event is private. It will be visible to invited participants only." />
-            )}
-          </>
+      <div className="w-full">
+        {!isEventCreator && (
+          <div className="w-full">
+            <ImageForm
+              initialData={event}
+              eventId={event.id}
+              editable={false}
+            />
+          </div>
         )}
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col gap-y-2">
-            <h1 className="text-2xl font-medium">{event.name}</h1>
-            <span className="text-sm text-slate-700">{event.description}</span>
-          </div>
+        <div className={`p-6 ${!isEventCreator ? "mt-6" : ""}`}>
           {isEventCreator && (
-            <Actions eventId={params.eventId} isPublished={event.isPublished} />
+            <>
+              {event.isOpen && (
+                <Banner label="This event is public. It will be visible to all users." />
+              )}
+              {!event.isOpen && (
+                <Banner label="This event is private. It will be visible to invited participants only." />
+              )}
+            </>
           )}
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-2 gap-6 mt-16">
-          <div className="p-6 flex justify-center">
+          <div className="flex items-center justify-between mt-4">
+            <div className="flex flex-col gap-y-2">
+              <h1 className="text-2xl font-medium">{event.name}</h1>
+              <span className="text-sm text-slate-700">
+                {event.description}
+              </span>
+            </div>
             {isEventCreator && (
-              <>
-                <div className="flex items-center gap-x-2">
-                  <h2 className="text-xl">Customize your event</h2>
-                </div>
-                <TitleForm
-                  initialData={event}
-                  eventId={event.id}
-                  editable={isEventCreator}
-                />
-                <DescriptionForm
-                  initialData={event}
-                  eventId={event.id}
-                  editable={isEventCreator}
-                />
-                <ImageForm
-                  initialData={event}
-                  eventId={event.id}
-                  editable={isEventCreator}
-                />
-              </>
+              <Actions
+                eventId={params.eventId}
+                isPublished={event.isPublished}
+              />
             )}
           </div>
-          <div className="space-y-6">
-            <div>
-              <SessionsForm
-                initialData={event}
-                eventId={event.id}
-                editable={isEventCreator}
-              />
-            </div>
-            <div className="space-y-6">
-              <EventTypeForm
-                initialData={event}
-                eventId={event.id}
-                options={eventTypes.map((eventType) => ({
-                  label: eventType.name,
-                  value: eventType.id,
-                }))}
-                editable={isEventCreator}
-              />
-            </div>
-            <div className="space-y-6">
-              <LocationForm
-                initialData={event}
-                eventId={event.id}
-                editable={isEventCreator}
-              />
-            </div>
-            <div className="space-y-6">
-              <DateRangeForm
-                initialData={event}
-                eventId={event.id}
-                editable={isEventCreator}
-              />
+          <div
+            className={`grid ${
+              isEventCreator ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"
+            } gap-6 mt-8`}
+          >
+            {isEventCreator && (
+              <div className="flex flex-col space-y-6">
+                <div>
+                  <div className="flex items-center gap-x-2">
+                    <h2 className="text-xl">Customize your event</h2>
+                  </div>
+                  <TitleForm
+                    initialData={event}
+                    eventId={event.id}
+                    editable={isEventCreator}
+                  />
+                  <DescriptionForm
+                    initialData={event}
+                    eventId={event.id}
+                    editable={isEventCreator}
+                  />
+                  <ImageForm
+                    initialData={event}
+                    eventId={event.id}
+                    editable={isEventCreator}
+                  />
+                </div>
+              </div>
+            )}
+            <div className="flex flex-col space-y-6">
+              <div>
+                <div>
+                  <DateRangeForm
+                    initialData={event}
+                    eventId={event.id}
+                    editable={isEventCreator}
+                  />
+                </div>
+                <div>
+                  <EventTypeForm
+                    initialData={event}
+                    eventId={event.id}
+                    options={eventTypes.map((eventType) => ({
+                      label: eventType.name,
+                      value: eventType.id,
+                    }))}
+                    editable={isEventCreator}
+                  />
+                </div>
+                <div>
+                  <LocationForm
+                    initialData={event}
+                    eventId={event.id}
+                    editable={isEventCreator}
+                  />
+                </div>
+                <SessionsForm
+                  initialData={event}
+                  eventId={event.id}
+                  editable={isEventCreator}
+                />
+              </div>
             </div>
           </div>
         </div>
