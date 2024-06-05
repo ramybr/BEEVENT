@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import { Banner } from "@/components/banner";
 import { SessionsForm } from "@/components/sessions-form";
 import { IconBadge } from "@/components/icon-badge";
-import LocationForm from "@/components/location-form";
 import { ImageForm } from "@/components/image-form";
 import { TitleForm } from "@/components/title-form";
 import { DescriptionForm } from "@/components/description-form";
@@ -13,6 +12,11 @@ import { EventTypeForm } from "@/components/event-type-form";
 import { Actions } from "@/components/actions";
 import { NextResponse } from "next/server";
 import { DateRangeForm } from "@/components/event-date-form";
+import dynamic from "next/dynamic";
+
+const LocationForm = dynamic(() => import("@/components/location-form"), {
+  ssr: false,
+});
 
 const EventPage = async ({ params }: { params: { eventId: number } }) => {
   const { userId } = auth();
@@ -37,6 +41,11 @@ const EventPage = async ({ params }: { params: { eventId: number } }) => {
           position: "asc",
         },
       },
+      participations: {
+        where: {
+          userId: user.id,
+        },
+      },
     },
   });
 
@@ -51,6 +60,7 @@ const EventPage = async ({ params }: { params: { eventId: number } }) => {
   });
 
   const isEventCreator = event.userId === user.id;
+  const isParticipating = event.participations.length > 0;
 
   return (
     <>
@@ -82,12 +92,12 @@ const EventPage = async ({ params }: { params: { eventId: number } }) => {
                 {event.description}
               </span>
             </div>
-            {isEventCreator && (
-              <Actions
-                eventId={params.eventId}
-                isPublished={event.isPublished}
-              />
-            )}
+            <Actions
+              eventId={params.eventId}
+              isPublished={event.isPublished}
+              isEventCreator={isEventCreator}
+              isParticipating={isParticipating}
+            />
           </div>
           <div
             className={`grid ${

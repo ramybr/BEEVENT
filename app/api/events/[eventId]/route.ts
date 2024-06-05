@@ -38,7 +38,6 @@ export async function PATCH(
 ) {
   try {
     const { userId } = auth();
-    const { eventId } = params;
     const values = await req.json();
 
     if (!userId) {

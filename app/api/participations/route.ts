@@ -2,10 +2,8 @@ import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
-export async function POST(
-  req: Request,
-  { params }: { params: { eventId: number } }
-) {
+// Handle participation
+export async function POST(req: Request) {
   try {
     const { userId } = auth();
 
@@ -20,26 +18,31 @@ export async function POST(
     });
 
     if (!user) {
-      return new NextResponse("User not found", { status: 404 });
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const { eventId } = await req.json();
+
+    if (!eventId) {
+      return new NextResponse("Event ID is required", { status: 400 });
     }
 
     const participation = await db.participation.create({
       data: {
         userId: user.id,
-        eventId: Number(params.eventId),
+        eventId: Number(eventId),
       },
     });
 
     return NextResponse.json(participation);
   } catch (error) {
-    console.log("[PARTICIPATIONS]", error);
+    console.log("[Participation POST]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
-export async function DELETE(
-  req: Request,
-  { params }: { params: { eventId: number } }
-) {
+
+// Handle cancel participation
+export async function DELETE(req: Request) {
   try {
     const { userId } = auth();
 
@@ -54,19 +57,25 @@ export async function DELETE(
     });
 
     if (!user) {
-      return new NextResponse("User not found", { status: 404 });
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const participation = await db.participation.deleteMany({
+    const { eventId } = await req.json();
+
+    if (!eventId) {
+      return new NextResponse("Event ID is required", { status: 400 });
+    }
+
+    await db.participation.deleteMany({
       where: {
         userId: user.id,
-        eventId: Number(params.eventId),
+        eventId: Number(eventId),
       },
     });
 
-    return NextResponse.json(participation);
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.log("[PARTICIPATIONS]", error);
+    console.log("[Participation DELETE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
