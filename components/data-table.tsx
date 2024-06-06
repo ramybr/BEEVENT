@@ -23,8 +23,9 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PlusCircle } from "lucide-react";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -39,6 +40,9 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+
+  const pathname = usePathname();
+  const isParticipationsPage = pathname?.includes("/participations");
 
   const table = useReactTable({
     data,
@@ -66,9 +70,11 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-        <Link href="/user/create">
-          <Button>New event</Button>
-        </Link>
+        {!isParticipationsPage && (
+          <Link href="/user/create">
+            <Button>New event</Button>
+          </Link>
+        )}
       </div>
       <div className="rounded-md border">
         <Table>
