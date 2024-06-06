@@ -1,6 +1,5 @@
 "use client";
 
-import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 
