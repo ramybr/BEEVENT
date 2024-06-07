@@ -27,7 +27,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
 
   const categories = await db.eventType.findMany({
     orderBy: {
-      name: "asc",
+      id: "asc",
     },
   });
 

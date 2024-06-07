@@ -13,7 +13,7 @@ export const SidebarItem = ({ label, href }: SidebarItemProps) => {
   const router = useRouter();
 
   const isActive =
-    (pathname === "/" && href === "/") ||
+    (pathname === "/search" && href === "/search") ||
     pathname === href ||
     pathname?.startsWith(`${href}/`);
 

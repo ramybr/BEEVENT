@@ -55,7 +55,7 @@ const EventPage = async ({ params }: { params: { eventId: number } }) => {
 
   const eventTypes = await db.eventType.findMany({
     orderBy: {
-      name: "asc",
+      id: "asc",
     },
   });
 
