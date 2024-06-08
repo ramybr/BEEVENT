@@ -107,7 +107,6 @@ model Attendance {
   session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
   isPresent Boolean
-
 }
 
 model Session {
