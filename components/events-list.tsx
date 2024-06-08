@@ -10,9 +10,19 @@ type EventsListProps = {
   items: EventWithCategory[];
 };
 
+const getStatus = (startDate: string, endDate: string): string => {
+  const today = new Date();
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  if (today < start) return "Upcoming";
+  if (today > end) return "Past";
+  return "Ongoing";
+};
+
 export const EventsList = ({ items }: EventsListProps) => {
   return (
-    <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
       {items.map((item) => (
         <div key={item.id} className="hover:scale-105 transition">
           <EventCard
@@ -21,13 +31,16 @@ export const EventsList = ({ items }: EventsListProps) => {
             imageUrl={item.imageUrl!}
             sessionsLength={item.sessions.length}
             category={item?.category?.name!}
+            startDate={item.startDate || "Not set"}
+            endDate={item.endDate || "Not set"}
+            status={getStatus(item.startDate!, item.endDate!)}
           />
         </div>
       ))}
 
       {items.length === 0 && (
-        <div className="text-center text-sm text-muted-foreground mt-10">
-          No events found
+        <div className="text-center text-sm text-gray-500 mt-10">
+          Aucun événement trouvé
         </div>
       )}
     </div>

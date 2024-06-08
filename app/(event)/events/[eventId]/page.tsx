@@ -138,6 +138,13 @@ const EventPage = async ({ params }: { params: { eventId: number } }) => {
                   />
                 </div>
                 <div>
+                  <div>
+                    <LocationForm
+                      initialData={event}
+                      eventId={event.id}
+                      editable={isEventCreator}
+                    />
+                  </div>
                   <EventTypeForm
                     initialData={event}
                     eventId={event.id}
@@ -145,13 +152,6 @@ const EventPage = async ({ params }: { params: { eventId: number } }) => {
                       label: eventType.name,
                       value: eventType.id,
                     }))}
-                    editable={isEventCreator}
-                  />
-                </div>
-                <div>
-                  <LocationForm
-                    initialData={event}
-                    eventId={event.id}
                     editable={isEventCreator}
                   />
                 </div>

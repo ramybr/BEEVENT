@@ -23,7 +23,7 @@ model Event {
   location String? @db.Text
 
   
-  status EventStatus @default(UPCOMING)
+  status EventStatus @default(Upcoming)
 
   isOpen Boolean @default(true)
   isMandatory Boolean @default(false)
@@ -51,10 +51,10 @@ model EventType {
 
 
 enum EventStatus {
-  UPCOMING
-  FINICHED
-  IN_PROGRESS
-  CANCELLED
+  Upcoming
+  Past
+  Ongoing
+  
 }
 
 model Participation {
@@ -129,14 +129,13 @@ model Session {
 
   createdAt DateTime @default(now())
 
-  status SessionStatus @default(UPCOMING)
+  status SessionStatus @default(Upcoming)
 }
 
 enum SessionStatus {
-  UPCOMING
-  FINICHED
-  IN_PROGRESS
-  CANCELLED
+  Upcoming
+  Past
+  Ongoing
 }
 
 model Organization {
