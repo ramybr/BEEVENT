@@ -28,7 +28,7 @@ export const EventsList = ({ items }: EventsListProps) => {
           <EventCard
             id={item.id}
             name={item.name}
-            imageUrl={item.imageUrl!}
+            imageUrl={item.imageUrl || "/public/no-image-available.png"}
             sessionsLength={item.sessions.length}
             category={item?.category?.name!}
             startDate={item.startDate || "Not set"}
@@ -39,9 +39,7 @@ export const EventsList = ({ items }: EventsListProps) => {
       ))}
 
       {items.length === 0 && (
-        <div className="text-center text-sm text-gray-500 mt-10">
-          Aucun événement trouvé
-        </div>
+        <div className="text-center text-sm text-gray-500 mt-10">No Events</div>
       )}
     </div>
   );

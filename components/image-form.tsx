@@ -79,7 +79,7 @@ export const ImageForm = ({
                   alt="Upload"
                   fill
                   className="object-cover rounded-md"
-                  src={initialData.imageUrl}
+                  src={initialData.imageUrl || "@public/no-image-available.png"}
                 />
               </div>
             ))}
@@ -104,7 +104,7 @@ export const ImageForm = ({
         <div className="relative w-full h-60 md:h-96">
           <Image
             alt="Event Cover"
-            src={initialData.imageUrl || "/default-cover.jpg"} // Fallback to a default image if none is provided
+            src={initialData.imageUrl || "@public/no-image-available.png"} // Fallback to a default image if none is provided
             layout="fill"
             className="object-cover"
           />

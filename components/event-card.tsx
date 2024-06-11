@@ -55,7 +55,7 @@ export const EventCard = async ({
 
   return (
     <Link href={`/events/${id}`}>
-      <div className="group hover:shadow-lg transition overflow-hidden border rounded-xl p-6 bg-white h-auto">
+      <div className="group hover:shadow-lg transition overflow-hidden border rounded-xl p-5 bg-white h-auto">
         <div className="relative w-full aspect-video rounded-t-lg overflow-hidden mb-4">
           <Image fill className="object-cover" alt={name} src={imageUrl} />
         </div>
@@ -73,8 +73,8 @@ export const EventCard = async ({
             </div>
           </div>
           <div className="text-sm text-gray-500 mb-4">
-            <strong>From :</strong> {formatDate(startDate)} <br />
-            <strong>To :</strong> {formatDate(endDate)}
+            <strong>From :</strong> {formatDate(startDate) || "Not set"} <br />
+            <strong>To :</strong> {formatDate(endDate) || "Not set"}
           </div>
           <div className="flex justify-between">
             <div className="text-center mt-4">
@@ -84,7 +84,7 @@ export const EventCard = async ({
             </div>
             <div>
               <button
-                className={`inline-block px-4 py-2 text-xs font-medium rounded-full ${
+                className={`inline-block px-4 py-2 text-sm font-medium rounded-full ${
                   status === "Upcoming"
                     ? "bg-green-100 text-green-800"
                     : status === "Past"
