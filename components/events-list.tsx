@@ -28,7 +28,10 @@ export const EventsList = ({ items }: EventsListProps) => {
           <EventCard
             id={item.id}
             name={item.name}
-            imageUrl={item.imageUrl || "/public/no-image-available.png"}
+            imageUrl={
+              item.imageUrl ||
+              "https://utfs.io/f/7985b43d-e45f-47c0-ad5c-e22f87394619-gv5of9.png"
+            }
             sessionsLength={item.sessions.length}
             category={item?.category?.name!}
             startDate={item.startDate || "Not set"}

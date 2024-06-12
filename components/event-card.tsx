@@ -47,9 +47,13 @@ export const EventCard = async ({
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
+    if (!date) {
+      return "Not set";
+    }
     const day = date.getDate().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear();
+
     return `${day}/${month}/${year}`;
   };
 
@@ -57,7 +61,15 @@ export const EventCard = async ({
     <Link href={`/events/${id}`}>
       <div className="group hover:shadow-lg transition overflow-hidden border rounded-xl p-5 bg-white h-auto">
         <div className="relative w-full aspect-video rounded-t-lg overflow-hidden mb-4">
-          <Image fill className="object-cover" alt={name} src={imageUrl} />
+          <Image
+            fill
+            className="object-cover"
+            alt={name}
+            src={
+              imageUrl ||
+              "https://utfs.io/f/7985b43d-e45f-47c0-ad5c-e22f87394619-gv5of9.png"
+            }
+          />
         </div>
         <div className="flex flex-col pb-4">
           <div className="text-xl font-semibold group-hover:text-sky-700 transition line-clamp-2">
@@ -73,8 +85,8 @@ export const EventCard = async ({
             </div>
           </div>
           <div className="text-sm text-gray-500 mb-4">
-            <strong>From :</strong> {formatDate(startDate) || "Not set"} <br />
-            <strong>To :</strong> {formatDate(endDate) || "Not set"}
+            <strong>From :</strong> {formatDate(startDate)} <br />
+            <strong>To :</strong> {formatDate(endDate)}
           </div>
           <div className="flex justify-between">
             <div className="text-center mt-4">
