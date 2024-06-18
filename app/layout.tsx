@@ -3,8 +3,26 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ToastProvider } from "@/components/providers/toaster-provider";
+import localFont from "next/font/local";
+import { Poppins } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const poppinsBold = Poppins({
+  weight: "700",
+  subsets: ["latin"],
+  variable: "--font-poppins-bold",
+});
+const poppins2 = Poppins({
+  weight: "500",
+  subsets: ["latin"],
+  variable: "--font-poppins2",
+});
+const poppins = Poppins({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-poppins",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://localhost:3000"),
@@ -19,8 +37,10 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en" className="font-Poppins">
-        <body className={inter.className}>
+      <html lang="en" className="!font-Poppins">
+        <body
+          className={`${poppins.variable} ${poppinsBold.variable} ${poppins2.variable}`}
+        >
           <ToastProvider />
           {children}
         </body>

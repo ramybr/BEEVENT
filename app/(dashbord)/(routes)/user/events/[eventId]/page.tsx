@@ -1,5 +1,3 @@
-// /pages/events/[eventId].tsx
-
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
@@ -14,6 +12,7 @@ import { SessionsForm } from "@/components/sessions-form";
 import { DateRangeForm } from "@/components/event-date-form";
 import { VisibilityForm } from "@/components/visibility-form";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 
 // Dynamically import the LocationForm to avoid SSR issues
 const LocationForm = dynamic(() => import("@/components/location-form"), {
@@ -74,7 +73,7 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
             <div className="flex flex-col gap-y-2">
               <h1 className="text-2xl font-medium">Event setup</h1>
               <span className="text-sm text-slate-700">
-                Complete event information
+                Complete event informations
               </span>
             </div>
             <Actions
@@ -129,6 +128,9 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
                 eventId={event.id}
                 editable={true}
               />
+              <Link href={`${event.id}/qrcode`}>
+                <span className="button">Generate QR Code</span>
+              </Link>
             </div>
           </div>
         </div>
