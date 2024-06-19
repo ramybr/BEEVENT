@@ -22,7 +22,19 @@ export default withUt({
     },
     extend: {
       fontFamily: {
-        Poppins: ["Poppins", "sans-serif"],
+        sans: [
+          "Poppins",
+          "apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
+          "PingFang SC",
+          "Hiragino Sans GB",
+          "Microsoft YaHei",
+          "Helvetica Neue",
+          "Helvetica",
+          "Arial",
+          "sans-serif",
+        ],
       },
       colors: {
         border: "hsl(var(--border))",

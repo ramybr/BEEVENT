@@ -7,13 +7,13 @@ type EventWithCategory = Event & {
 };
 
 type GetEvents = {
-  userId: number | undefined;
+  // userId: number | undefined;
   title?: string;
   categoryId?: number;
 };
 
 export const getEvents = async ({
-  userId,
+  // userId,
   title,
   categoryId,
 }: GetEvents): Promise<EventWithCategory[]> => {

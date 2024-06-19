@@ -17,6 +17,7 @@ interface EventCardProps {
   startDate: string;
   endDate: string;
   status: string;
+  description: string;
 }
 
 export const EventCard = async ({
@@ -28,6 +29,7 @@ export const EventCard = async ({
   startDate,
   endDate,
   status,
+  description,
 }: EventCardProps) => {
   const { userId } = auth();
 
@@ -59,7 +61,7 @@ export const EventCard = async ({
 
   return (
     <Link href={`/events/${id}`}>
-      <div className="group hover:shadow-lg transition overflow-hidden border rounded-xl p-5 bg-white h-auto">
+      <div className="group hover:shadow-lg transition overflow-hidden border rounded-xl  bg-white h-auto">
         <div className="relative w-full aspect-video rounded-t-lg overflow-hidden mb-4">
           <Image
             fill
@@ -71,8 +73,8 @@ export const EventCard = async ({
             }
           />
         </div>
-        <div className="flex flex-col pb-4">
-          <div className="text-xl font-semibold group-hover:text-sky-700 transition line-clamp-2">
+        <div className="flex flex-col pb-4 p-4">
+          <div className="text-xl font-bold group-hover:text-sky-700 transition line-clamp-2">
             {name}
           </div>
           <p className="text-sm text-gray-500 mb-2">{category}</p>
@@ -84,16 +86,7 @@ export const EventCard = async ({
               </span>
             </div>
           </div>
-          <div className="text-sm text-gray-500 mb-4">
-            <strong>From :</strong> {formatDate(startDate)} <br />
-            <strong>To :</strong> {formatDate(endDate)}
-          </div>
-          <div className="flex justify-between">
-            <div className="text-center mt-4">
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm">
-                See details &gt;&gt;
-              </button>
-            </div>
+          <div className=" flex justify-between text-sm text-gray-500 mb-4">
             <div>
               <button
                 className={`inline-block px-4 py-2 text-sm font-medium rounded-full ${
@@ -105,6 +98,20 @@ export const EventCard = async ({
                 }`}
               >
                 {status}
+              </button>
+            </div>
+            <div>
+              <strong>From :</strong> {formatDate(startDate)} <br />
+              <strong>To :</strong> {formatDate(endDate)}
+            </div>
+          </div>
+          <div className=" text-slate-500 tracking-tighter line-clamp-2 italic">
+            {description}
+          </div>
+          <div className="flex justify-end">
+            <div className="text-center mt-4">
+              <button className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-semibold">
+                See details
               </button>
             </div>
           </div>

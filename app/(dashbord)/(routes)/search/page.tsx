@@ -14,16 +14,16 @@ type SearchPageProps = {
 };
 
 const SearchPage = async ({ searchParams }: SearchPageProps) => {
-  const { userId } = auth();
-  if (!userId) {
-    return redirect("/");
-  }
+  // const { userId } = auth();
+  // if (!userId) {
+  //   return redirect("/");
+  // }
 
-  const user = await db.user.findUnique({
-    where: {
-      clerkId: userId,
-    },
-  });
+  // const user = await db.user.findUnique({
+  //   where: {
+  //     clerkId: userId!,
+  //   },
+  // });
 
   const categories = await db.eventType.findMany({
     orderBy: {
@@ -32,7 +32,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
   });
 
   const events = await getEvents({
-    userId: user?.id,
+    // userId: user?.id,
     ...searchParams,
   });
 

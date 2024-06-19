@@ -30,13 +30,14 @@ export const EventsList = ({ items }: EventsListProps) => {
             name={item.name}
             imageUrl={
               item.imageUrl ||
-              "https://utfs.io/f/7985b43d-e45f-47c0-ad5c-e22f87394619-gv5of9.png"
+              "https://utfs.io/f/e4e3daee-cb35-4c9b-a031-3f3f1a480ca2-l29tif.png"
             }
             sessionsLength={item.sessions.length}
             category={item?.category?.name!}
             startDate={item.startDate || "Not set"}
             endDate={item.endDate || "Not set"}
             status={getStatus(item.startDate!, item.endDate!)}
+            description={item.description || "No description"}
           />
         </div>
       ))}

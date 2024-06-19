@@ -31,9 +31,7 @@ export const NavbarRoutes = () => {
           </Link>
         ) : (
           <Link href="/user/create">
-            <Button size="sm" variant="ghost">
-              Create your event
-            </Button>
+            <Button size="sm">Create your event</Button>
           </Link>
         )}
         <UserButton afterSignOutUrl="/" />

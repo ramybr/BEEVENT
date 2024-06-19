@@ -47,11 +47,7 @@ const ChapterIdPage = async ({
             eventId={params.eventId}
             sessionId={params.sessionId}
           />
-          <div className="flex items-center justify-between w-full">
-            <div className="flex flex-col gap-y-2">
-              <h1 className="text-2-xl font-medium">Session creation</h1>
-            </div>
-          </div>
+          <div className="flex items-center justify-between w-full"></div>
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
@@ -70,19 +66,15 @@ const ChapterIdPage = async ({
               initialData={session}
               eventId={params.eventId}
               sessionId={params.sessionId}
+              editable={true}
             />
             <SessionTimeForm
               initialData={session}
               eventId={params.eventId}
               sessionId={params.sessionId}
+              editable={true}
             />
           </div>
-          {/* <div>
-            <div className="flex items-center gap-x-2">
-              <IconBadge icon={Eye} />
-              <h2 className="text-xl">Access Settings</h2>
-            </div>
-          </div> */}
         </div>
         <div></div>
       </div>

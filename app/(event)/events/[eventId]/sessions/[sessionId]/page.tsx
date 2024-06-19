@@ -18,6 +18,12 @@ const ChapterIdPage = async ({
     return redirect("/");
   }
 
+  const user = await db.user.findUnique({
+    where: {
+      clerkId: userId,
+    },
+  });
+
   const session = await db.session.findUnique({
     where: {
       id: Number(params.sessionId),
@@ -28,6 +34,14 @@ const ChapterIdPage = async ({
   if (!session) {
     return redirect("/");
   }
+
+  const event = await db.event.findUnique({
+    where: {
+      id: Number(params.eventId),
+    },
+  });
+
+  const isSessionCreator = event?.userId === user?.id;
 
   return (
     <div className="p-6">
@@ -64,6 +78,7 @@ const ChapterIdPage = async ({
               initialData={session}
               eventId={params.eventId}
               sessionId={params.sessionId}
+              editable={isSessionCreator}
             />
           </div>
           <div>
