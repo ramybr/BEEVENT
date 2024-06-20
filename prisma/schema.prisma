@@ -39,6 +39,8 @@ model Event {
 
   sessions Session[]
 
+  attendaces Attendance[]
+
   imageUrl String? @db.Text
 
 }
@@ -98,15 +100,15 @@ enum userRole {
 
 model Attendance {
  
-  @@id([userId, sessionId])
+  id Int  @id @default(autoincrement())
   userId Int
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
 
-  sessionId Int
-  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  eventId Int
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
-  isPresent Boolean
+  isPresent Boolean @default(false)
 }
 
 model Session {
@@ -116,7 +118,6 @@ model Session {
   eventId Int
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
-  attendaces Attendance[]
 
   sessionStart String? 
   sessionEnd String? 
