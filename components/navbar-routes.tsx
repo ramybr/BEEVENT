@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import { Ghost, LogOut } from "lucide-react";
 import Link from "next/link";
 import { SearchInput } from "./search-input";
+import Header from "./header";
 
 export const NavbarRoutes = () => {
   const pathname = usePathname();
@@ -31,7 +32,9 @@ export const NavbarRoutes = () => {
           </Link>
         ) : (
           <Link href="/user/create">
-            <Button size="sm">Create your event</Button>
+            <Button size="sm" variant="ghost">
+              Create your event
+            </Button>
           </Link>
         )}
         <UserButton afterSignOutUrl="/" />

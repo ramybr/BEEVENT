@@ -55,6 +55,7 @@
     "react-map-gl-geocoder": "^1.8.1",
     "react-places-autocomplete": "^7.3.0",
     "react-time-picker": "^7.0.0",
+    "recharts": "^2.12.7",
     "shadcn-ui": "^0.2.3",
     "svix": "^1.21.0",
     "tailwind-merge": "^2.3.0",
