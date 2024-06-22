@@ -13,6 +13,8 @@ import { Actions } from "@/components/actions";
 import { NextResponse } from "next/server";
 import { DateRangeForm } from "@/components/event-date-form";
 import dynamic from "next/dynamic";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const LocationForm = dynamic(() => import("@/components/location-form"), {
   ssr: false,
@@ -126,6 +128,11 @@ const EventPage = async ({ params }: { params: { eventId: number } }) => {
                     editable={isEventCreator}
                   />
                 </div>
+                <Button>
+                  <Link href={`/user/events/${event.id}/qrcode`} replace>
+                    <span className="button">Generate QR Code</span>
+                  </Link>
+                </Button>
               </div>
             )}
             <div className="flex flex-col space-y-6">

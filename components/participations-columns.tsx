@@ -85,3 +85,4 @@ export const participationColumns: ColumnDef<
     },
   },
 ];
+//TODO: create event participations column

@@ -13,6 +13,7 @@ import { DateRangeForm } from "@/components/event-date-form";
 import { VisibilityForm } from "@/components/visibility-form";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 // Dynamically import the LocationForm to avoid SSR issues
 const LocationForm = dynamic(() => import("@/components/location-form"), {
@@ -128,9 +129,11 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
                 eventId={event.id}
                 editable={true}
               />
-              <Link href={`${event.id}/qrcode`}>
-                <span className="button">Generate QR Code</span>
-              </Link>
+              <Button>
+                <Link href={`${event.id}/qrcode`}>
+                  <span className="button">Generate QR Code</span>
+                </Link>
+              </Button>
             </div>
           </div>
         </div>

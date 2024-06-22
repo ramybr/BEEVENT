@@ -13,7 +13,7 @@ const Header = () => {
     <header className="w-full py-6 bg-white shadow-md">
       <div className="container mx-auto flex justify-between items-center">
         <h1 className="text-3xl font-bold">EventManager</h1>
-        <nav className="space-x-4">
+        <nav className="flex justify-center align-middle space-x-4">
           <UserButton afterSignOutUrl="/" />
           <SignedOut>
             <SignInButton>
@@ -24,7 +24,7 @@ const Header = () => {
             </SignUpButton>
           </SignedOut>
           <SignedIn>
-            <Link href="/dashboard">
+            <Link href="/user/analytics">
               <Button variant="outline">Dashboard</Button>
             </Link>
           </SignedIn>

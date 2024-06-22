@@ -58,7 +58,7 @@ const HomePage = () => {
         <footer className="w-full py-6 bg-white shadow-md mt-auto">
           <div className="container mx-auto text-center">
             <p className="text-gray-700">
-              © 2023 EventManager. All rights reserved.
+              © 2024 EventManager. All rights reserved.
             </p>
           </div>
         </footer>

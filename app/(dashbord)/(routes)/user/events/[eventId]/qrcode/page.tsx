@@ -5,13 +5,14 @@ import QRCode from "qrcode.react";
 import { useState, useEffect, useRef } from "react";
 import jsPDF from "jspdf";
 import axios from "axios";
+import { Button } from "@/components/ui/button";
 
 const QRCodePage = () => {
   const { eventId } = useParams();
   const qrRef = useRef<HTMLDivElement>(null);
   const [eventName, setEventName] = useState("");
 
-  const eventUrl = `https://localhost:3000/events/${eventId}`;
+  const eventUrl = `https://localhost:3000/events/${eventId}/attendance`;
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -44,15 +45,15 @@ const QRCodePage = () => {
   };
 
   return (
-    <div className="p-6 flex justify-center">
-      <div className="max-w-4xl w-full">
+    <div className="flex justify-center items-center">
+      <div className="p-6 flex flex-col max-w-sm justify-center items-center">
         <h1 className="text-2xl font-medium">Event QR Code</h1>
         <div ref={qrRef} className="my-4">
           <QRCode value={eventUrl} size={256} />
         </div>
-        <button onClick={downloadPDF} className="button">
+        <Button onClick={downloadPDF} className="button">
           Download QR Code as PDF
-        </button>
+        </Button>
       </div>
     </div>
   );
