@@ -47,6 +47,14 @@ export const EventCard = async ({
     return new NextResponse("User not found", { status: 404 });
   }
 
+  const event = await db.event.findUnique({
+    where: {
+      id: id,
+    },
+  });
+
+  const isEventCreator = user.id === event?.userId;
+
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     if (!date) {
@@ -77,6 +85,7 @@ export const EventCard = async ({
           <div className="text-xl font-bold group-hover:text-sky-700 transition line-clamp-2">
             {name}
           </div>
+
           <p className="text-sm text-gray-500 mb-2">{category}</p>
           <div className="my-3 flex items-center gap-x-2 text-sm">
             <div className="flex items-center gap-x-1 text-slate-500">
@@ -101,6 +110,13 @@ export const EventCard = async ({
               </button>
             </div>
             <div>
+              {isEventCreator && (
+                <button className="inline-block px-4 py-2 text-sm font-medium rounded-full bg-primary text-primary-foreground">
+                  My event
+                </button>
+              )}
+            </div>
+            <div>
               <strong>From :</strong> {formatDate(startDate)} <br />
               <strong>To :</strong> {formatDate(endDate)}
             </div>
@@ -110,7 +126,7 @@ export const EventCard = async ({
           </div>
           <div className="flex justify-end">
             <div className="text-center mt-4">
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-semibold">
+              <button className="px-4 py-2 bg-primary text-primary-foreground rounded-full text-sm font-semibold">
                 See details
               </button>
             </div>
