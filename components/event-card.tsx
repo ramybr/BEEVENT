@@ -109,25 +109,26 @@ export const EventCard = async ({
                 {status}
               </button>
             </div>
-            <div>
-              {isEventCreator && (
-                <button className="inline-block px-4 py-2 text-sm font-medium rounded-full bg-primary text-primary-foreground">
-                  My event
-                </button>
-              )}
-            </div>
+
             <div>
               <strong>From :</strong> {formatDate(startDate)} <br />
               <strong>To :</strong> {formatDate(endDate)}
             </div>
           </div>
-          <div className=" text-slate-500 tracking-tighter line-clamp-2 italic">
+          <div className=" text-slate-500 text-sm tracking-tighter line-clamp-1 italic">
             {description}
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-between items-center">
             <div className="text-center mt-4">
-              <button className="px-4 py-2 bg-primary text-primary-foreground rounded-full text-sm font-semibold">
-                See details
+              {isEventCreator && (
+                <button className="inline-block px-4 py-2 text-sm font-medium rounded-full bg-secondary text-primary-foreground">
+                  My event
+                </button>
+              )}
+            </div>
+            <div className="text-center mt-4">
+              <button className="px-4 py-2 bg-primary text-primary-foreground rounded-full text-sm font-semibold hover:bg-primary/90">
+                See details &gt;&gt;
               </button>
             </div>
           </div>
