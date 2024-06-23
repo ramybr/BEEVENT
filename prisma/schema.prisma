@@ -67,6 +67,14 @@ model Participation {
   eventId Int
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
+  roleInEvent String @default("Attendee")
+
+}
+
+enum RoleInEvent {
+  Organizer
+  Attendee
+  Speaker
 }
 
 model User {
@@ -141,23 +149,18 @@ enum SessionStatus {
 model Organization {
   id Int @id @default(autoincrement())
   name String
-  activitySector ActivitySector
+  activitySectorId Int 
+  activitySector ActivitySector? @relation(fields: [activitySectorId], references: [id], onDelete: Cascade)
 
   employees User[]
 }
 
-enum ActivitySector {
-  TECHNOLOGY
-  ENERGY
-  FINANCE
-  HEALTH_CARE
-  TELECOMMUNICATIONS
-  MOTOR_VEHICULES
-  FOOD_BEVERAGE
-  TRANSPORTATIONS
-  ENGINEERING_CONSTRUCTION
-  MEDIA
-  OTHER
+model ActivitySector {
+  id Int @id @default(autoincrement())
+  name String
+
+  organizations Organization[]
+  
 }
 
 
