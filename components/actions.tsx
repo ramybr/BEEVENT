@@ -106,7 +106,7 @@ export const Actions = ({
         </>
       ) : (
         <>
-          {!isParticipating ? (
+          {!isEventCreator && !isParticipating ? (
             <Button
               onClick={onParticipate}
               disabled={isLoading}

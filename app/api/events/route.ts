@@ -25,6 +25,14 @@ export async function POST(req: Request) {
       },
     });
 
+    const participation = await db.participation.create({
+      data: {
+        userId: user.id,
+        eventId: event.id,
+        roleInEvent: "Organizer",
+      },
+    });
+
     return NextResponse.json(event);
   } catch (error) {
     console.log("[Events]", error);
