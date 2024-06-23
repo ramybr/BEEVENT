@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -65,22 +64,6 @@ const CreatePage = () => {
               control={form.control}
               name="name"
               render={({ field }) => (
-                //     <FormItem>
-                //       <FormLabel>event title</FormLabel>
-                //       <FormControl>
-                //         <input
-                //           disabled={isSubmitting}
-                //           placeholder=" (e.g 'Advanced Web Development')"
-                //           {...field}
-                //         />
-                //       </FormControl>
-                //       <FormDescription>
-                //         What will you teach in this event ?
-                //       </FormDescription>
-                //       <FormMessage />
-                //     </FormItem>
-                //   )}
-                // />
                 <FormItem>
                   <FormLabel>Event name :</FormLabel>
                   <FormControl>
@@ -90,9 +73,6 @@ const CreatePage = () => {
                       {...field}
                     />
                   </FormControl>
-                  {/* <FormDescription>
-                    What will you teach in this event?
-                  </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
