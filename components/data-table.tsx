@@ -26,15 +26,19 @@ import { Input } from "@/components/ui/input";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  filterColumnId: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  filterColumnId,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -42,41 +46,63 @@ export function DataTable<TData, TValue>({
   );
 
   const pathname = usePathname();
-  const isParticipationsPage = pathname?.includes("/participations");
+  const isEventsPage = pathname === "/user/events";
 
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
       columnFilters,
     },
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
   });
+
+  const { theme, resolvedTheme } = useTheme();
+
+  type ButtonVariant =
+    | "default"
+    | "link"
+    | "ghost-dark"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost";
+
+  const [buttonVariant, setButtonVariant] = useState<ButtonVariant>("ghost");
+
+  useEffect(() => {
+    const currentTheme: ButtonVariant =
+      theme === "dark" || resolvedTheme === "dark" ? "ghost-dark" : "ghost";
+    setButtonVariant(currentTheme);
+  }, [theme, resolvedTheme]);
 
   return (
     <div>
-      <div className="flex items-center py-4 justify-between">
+      <div className="flex items-center py-4 justify-between dark:bg-background-1st-level">
         <Input
-          placeholder="Find events..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+          placeholder="Search..."
+          value={
+            (table.getColumn(filterColumnId)?.getFilterValue() as string) ?? ""
           }
-          className="max-w-sm"
+          onChange={(event) =>
+            table.getColumn(filterColumnId)?.setFilterValue(event.target.value)
+          }
+          className="w-full md:w-[300px] pl-9 rounded-full bg-slate-100 focus-visible:ring-slate-200 dark:bg-bg1-contrast dark:focus-visible:ring-bg1-contrast dark:placeholder-background-1st-level dark:text-background-1st-level"
         />
-        {!isParticipationsPage && (
+
+        {isEventsPage && (
           <Link href="/user/create">
-            <Button>New event</Button>
+            <Button variant={buttonVariant}>New event</Button>
           </Link>
         )}
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md dark:bg-background-2nd-level">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

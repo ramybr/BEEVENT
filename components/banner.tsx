@@ -4,12 +4,12 @@ import { AlertTriangle, CheckCheckIcon, CheckCircleIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const banneraVariants = cva(
-  "border text-center p-4 text-sm flex items-center w-full",
+  "border text-center p-4 text-sm flex items-center w-full ",
   {
     variants: {
       variant: {
-        warning: "bg-slate-100/80 border-yellow-30 text-primary",
-        success: "bg-emerald-700 border-emerald-800 text-secondary",
+        warning: "bg-emerald-700 border-emerald-800 text-primary",
+        success: "bg-banner-dark border-banner-dark text-bg1-contrast",
       },
     },
     defaultVariants: {

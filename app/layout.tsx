@@ -1,14 +1,10 @@
 import "./globals.css";
 import type { Metadata } from "next";
-// import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ToastProvider } from "@/components/providers/toaster-provider";
-
-import { ThemeProvider } from "@/components/providers/theme-provider";
+import { ThemeProvider } from "next-themes";
 import { ModeToggle } from "@/components/ui/mode-toggle";
-import Header from "@/components/header";
-
-// const inter = Inter({ subsets: ["latin"] });
+import ClerkThemeProvider from "@/components/clerk-theme-provider";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://localhost:3000"),
@@ -22,13 +18,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en" className="!font-Poppins">
-        <body className="dark:bg-gray-800">
-          <ToastProvider />
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en" className="!font-Poppins" suppressHydrationWarning>
+      <body className="dark:bg-background-1st-level dark:border-background-1st-level">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ClerkThemeProvider>
+            <ModeToggle />
+            <ToastProvider />
+            {children}
+          </ClerkThemeProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
+import { useTheme } from "next-themes";
 import {
   Bar,
   BarChart,
@@ -37,8 +38,9 @@ const CustomTooltip = ({ active, payload }: any) => {
 };
 
 export const Chart = ({ data }: ChartProps) => {
+  const { theme } = useTheme();
   return (
-    <Card>
+    <Card className="dark:bg-background-2nd-level dark:text-light-green-dark">
       <ResponsiveContainer width="100%" height={350}>
         <BarChart data={data}>
           <XAxis
@@ -70,11 +72,14 @@ export const Chart = ({ data }: ChartProps) => {
               ) + 5,
             ]}
           />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip
+            labelStyle={{ backgroundColor: "red" }}
+            content={<CustomTooltip />}
+          />
           <Legend />
           <Bar
             dataKey="participations"
-            fill="#0369a1"
+            fill={theme === "dark" ? "#AF65DB" : "#0369a1"}
             name="Participations"
             radius={[4, 4, 0, 0]}
           />

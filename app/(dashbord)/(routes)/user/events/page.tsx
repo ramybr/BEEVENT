@@ -3,7 +3,7 @@ import { columns } from "@/components/columns";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
-import { getUserByClerkUserId } from "@/utils/userService";
+
 import { NextResponse } from "next/server";
 
 const EventsPage = async () => {
@@ -37,7 +37,7 @@ const EventsPage = async () => {
       <span>
         <h1 className="text-2xl">{user.firstName}'s events</h1>
       </span>
-      <DataTable columns={columns} data={events} />
+      <DataTable columns={columns} data={events} filterColumnId="name" />
     </div>
   );
 };

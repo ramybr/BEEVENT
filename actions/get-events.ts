@@ -21,6 +21,7 @@ export const getEvents = async ({
     const events = await db.event.findMany({
       where: {
         isPublished: true,
+        isOpen: true,
         name: {
           contains: title,
         },

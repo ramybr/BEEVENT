@@ -39,7 +39,7 @@ model Event {
 
   sessions Session[]
 
-  attendaces Attendance[]
+  attendances Attendance[]
 
   imageUrl String? @db.Text
 

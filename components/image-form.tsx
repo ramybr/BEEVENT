@@ -5,12 +5,13 @@ import axios from "axios";
 
 import { Button } from "@/components/ui/button";
 import { ImageIcon, Pencil, PlusCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Event } from "@prisma/client";
 import Image from "next/image";
 import { FileUpload } from "@/components/file-upload";
+import { useTheme } from "next-themes";
 
 type ImageFormProps = {
   initialData: Event;
@@ -46,13 +47,32 @@ export const ImageForm = ({
     }
   };
 
+  const { theme, resolvedTheme } = useTheme();
+
+  type ButtonVariant =
+    | "default"
+    | "link"
+    | "ghost-dark"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost";
+
+  const [buttonVariant, setButtonVariant] = useState<ButtonVariant>("ghost");
+
+  useEffect(() => {
+    const currentTheme: ButtonVariant =
+      theme === "dark" || resolvedTheme === "dark" ? "ghost-dark" : "ghost";
+    setButtonVariant(currentTheme);
+  }, [theme, resolvedTheme]);
+
   return (
     <>
       {editable && (
-        <div className="mt-6 border bg-slate-100 rounded-md p-4">
+        <div className="mt-6 border bg-slate-100 rounded-md p-4 dark:bg-background-2nd-level">
           <div className="font-medium flex items-center justify-between">
             Event image
-            <Button onClick={toggleEdit} variant="ghost">
+            <Button onClick={toggleEdit} variant={buttonVariant}>
               {isEditing && <>Cancel</>}
               {!isEditing && !initialData.imageUrl && (
                 <>
@@ -79,7 +99,7 @@ export const ImageForm = ({
                   alt="Upload"
                   fill
                   className="object-cover rounded-md"
-                  src={initialData.imageUrl || "/no-image-available.png"}
+                  src={initialData.imageUrl || "/images/upload-image.svg"}
                   // layout="responsive"
                 />
               </div>
@@ -102,10 +122,10 @@ export const ImageForm = ({
         </div>
       )}
       {!editable && (
-        <div className="relative w-full h-60 md:h-96">
+        <div className="relative w-full h-60 md:h-96 ">
           <Image
             alt="Event Cover"
-            src={initialData.imageUrl || "/no-image-available.png"}
+            src={initialData.imageUrl || "/images/upload-image.svg"}
             // layout="responsive"
             className="object-cover"
             fill

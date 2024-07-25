@@ -50,8 +50,8 @@ const CreatePage = () => {
   return (
     <div className=" max-w-5xl mx-auto flex md:items-center md:justify-center h-full p-6">
       <div>
-        <h1 className="text-2xl">Name your event</h1>
-        <p className=" text-sm text-slate-600">
+        <h1 className="text-2xl dark:text-bg1-contrast">Name your event</h1>
+        <p className=" text-sm text-slate-600 dark:text-bg1-contrast">
           What would you like to name your event ? Don&apos;t worry, you can
           change this later.
         </p>
@@ -71,6 +71,7 @@ const CreatePage = () => {
                       disabled={isSubmitting}
                       placeholder="e.g. 'Seminar for web developers'"
                       {...field}
+                      className="dark:text-bg1-contrast  dark:focus-visible:outline-background-1st-level"
                     />
                   </FormControl>
                   <FormMessage />
@@ -79,11 +80,15 @@ const CreatePage = () => {
             />
             <div className=" flex items-center gap-x-2">
               <Link href="/">
-                <Button type="button" variant="ghost">
+                <Button type="button" variant="ghost-dark">
                   Cancel
                 </Button>
               </Link>
-              <Button type="submit" disabled={!isValid || isSubmitting}>
+              <Button
+                type="submit"
+                disabled={!isValid || isSubmitting}
+                className="text-bg1-contrast dark:bg-button-dark"
+              >
                 Continue
               </Button>
             </div>

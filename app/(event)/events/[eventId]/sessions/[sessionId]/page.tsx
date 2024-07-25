@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { SessionTitleForm } from "@/components/session-title-form";
 import { SessionDescriptionForm } from "@/components/session-description-form";
 
-const ChapterIdPage = async ({
+const SessionIdPage = async ({
   params,
 }: {
   params: { eventId: number; sessionId: number };
@@ -62,11 +62,10 @@ const ChapterIdPage = async ({
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16 justify-center items-center">
         <div className="space-y-4">
           <div>
             <div className="flex items-center gap-x-2">
-              <IconBadge icon={LayoutDashboard} />
               <h2 className="text-xl">Customize session</h2>
             </div>
             <SessionTitleForm
@@ -81,12 +80,6 @@ const ChapterIdPage = async ({
               editable={isSessionCreator}
             />
           </div>
-          <div>
-            <div className="flex items-center gap-x-2">
-              <IconBadge icon={Eye} />
-              <h2 className="text-xl">Access Settings</h2>
-            </div>
-          </div>
         </div>
         <div></div>
       </div>
@@ -94,4 +87,4 @@ const ChapterIdPage = async ({
   );
 };
 
-export default ChapterIdPage;
+export default SessionIdPage;

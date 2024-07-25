@@ -1,72 +1,77 @@
+// file: app/api/events/[eventId]/participations/route.ts
+
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(
-  req: Request,
-  { params }: { params: { eventId: number } }
+// Fetch participants for an event
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { eventId: string } }
 ) {
   try {
     const { userId } = auth();
 
     if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await db.user.findUnique({
-      where: {
-        clerkId: userId,
-      },
+    const event = await db.event.findUnique({
+      where: { id: Number(params.eventId) },
     });
 
-    if (!user) {
-      return new NextResponse("User not found", { status: 404 });
+    if (!event) {
+      return NextResponse.json({ error: "Event not found" }, { status: 404 });
     }
 
-    const participation = await db.participation.create({
-      data: {
-        userId: user.id,
-        eventId: Number(params.eventId),
-      },
+    const participations = await db.participation.findMany({
+      where: { eventId: event.id },
+      include: { user: true },
     });
 
-    return NextResponse.json(participation);
+    return NextResponse.json(participations);
   } catch (error) {
-    console.log("[PARTICIPATIONS]", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    console.error("[FETCH PARTICIPATIONS]", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
-export async function DELETE(
-  req: Request,
-  { params }: { params: { eventId: number } }
+
+// Update participant role
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { eventId: string; participantId: string } }
 ) {
   try {
     const { userId } = auth();
 
     if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await db.user.findUnique({
+    const { roleInEvent } = await req.json();
+
+    if (roleInEvent !== "Attendee" && roleInEvent !== "Speaker") {
+      return NextResponse.json({ error: "Invalid role" }, { status: 400 });
+    }
+
+    const participant = await db.participation.update({
       where: {
-        clerkId: userId,
+        id: Number(params.participantId),
+      },
+      data: {
+        roleInEvent,
       },
     });
 
-    if (!user) {
-      return new NextResponse("User not found", { status: 404 });
-    }
-
-    const participation = await db.participation.deleteMany({
-      where: {
-        userId: user.id,
-        eventId: Number(params.eventId),
-      },
-    });
-
-    return NextResponse.json(participation);
+    return NextResponse.json(participant);
   } catch (error) {
-    console.log("[PARTICIPATIONS]", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    console.error("[UPDATE PARTICIPATION]", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

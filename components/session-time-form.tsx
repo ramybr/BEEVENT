@@ -13,6 +13,8 @@ import "react-clock/dist/Clock.css";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 type SessionTimeFormProps = {
   initialData: {
@@ -21,7 +23,7 @@ type SessionTimeFormProps = {
   };
   eventId: number;
   sessionId: number;
-  editable: boolean; // Add editable prop
+  editable: boolean;
 };
 
 const formSchema = z.object({
@@ -38,8 +40,8 @@ export const SessionTimeForm = ({
   const defaultStartTime = setSeconds(
     setMinutes(setHours(new Date(), 8), 0),
     0
-  ); // 08:00 local time
-  const defaultEndTime = setSeconds(setMinutes(setHours(new Date(), 17), 0), 0); // 17:00 local time
+  );
+  const defaultEndTime = setSeconds(setMinutes(setHours(new Date(), 17), 0), 0);
 
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: initialData.sessionStart
@@ -129,7 +131,7 @@ export const SessionTimeForm = ({
 
   if (!editable) {
     return (
-      <div className="grid gap-2">
+      <div className="grid gap-2 dark:bg-background-2nd-level dark:text-bg2-contrast">
         <div>
           <strong>Session Start:</strong>{" "}
           {initialData.sessionStart
@@ -146,9 +148,28 @@ export const SessionTimeForm = ({
     );
   }
 
+  const { theme, resolvedTheme } = useTheme();
+
+  type ButtonVariant =
+    | "default"
+    | "link"
+    | "ghost-dark"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost";
+
+  const [buttonVariant, setButtonVariant] = useState<ButtonVariant>("ghost");
+
+  useEffect(() => {
+    const currentTheme: ButtonVariant =
+      theme === "dark" || resolvedTheme === "dark" ? "ghost-dark" : "ghost";
+    setButtonVariant(currentTheme);
+  }, [theme, resolvedTheme]);
+
   return (
-    <div className="max-w-lg mx-auto mt-6 border bg-slate-100 rounded-md p-4">
-      <div className="font-medium mb-4">Event Dates</div>
+    <div className="max-w-lg mx-auto mt-6 border bg-slate-100 rounded-md p-4 dark:bg-background-2nd-level dark:text-bg2-contrast">
+      <div className="font-medium mb-4">Session time</div>
       {isEditing ? (
         <div className="grid gap-2">
           <div className="flex items-center gap-2">
@@ -162,7 +183,7 @@ export const SessionTimeForm = ({
               numberOfMonths={1}
             />
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col items-center gap-2">
             {isPickingStartTime ? (
               <TimePicker
                 className="w-full p-2 border rounded-md"
@@ -181,7 +202,7 @@ export const SessionTimeForm = ({
           </div>
           <div className="flex gap-2 mt-4">
             <Button onClick={handleSave}>Save Dates</Button>
-            <Button variant="secondary" onClick={handleCancel}>
+            <Button variant={buttonVariant} onClick={handleCancel}>
               Cancel
             </Button>
           </div>
@@ -200,7 +221,11 @@ export const SessionTimeForm = ({
               ? format(new Date(initialData.sessionEnd), "MMM dd, yyyy HH:mm")
               : "Not set"}
           </div>
-          <Button onClick={() => setIsEditing(true)} className="mt-4">
+          <Button
+            onClick={() => setIsEditing(true)}
+            className="mt-4"
+            variant={buttonVariant}
+          >
             Edit Dates
           </Button>
         </div>

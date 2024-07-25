@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 
 type DateRangeFormProps = {
   initialData: {
@@ -17,7 +19,7 @@ type DateRangeFormProps = {
     endDate: string | null;
   };
   eventId: number;
-  editable: boolean; // Add editable prop
+  editable: boolean;
 };
 
 const formSchema = z.object({
@@ -80,7 +82,7 @@ export const DateRangeForm = ({
 
   if (!editable) {
     return (
-      <div className="mt-6 border bg-slate-100 rounded-md p-4">
+      <div className="mt-6 border bg-slate-100 rounded-md p-4 dark:bg-background-2nd-level dark:text-bg2-contrast">
         <div className="font-medium mb-4">Event Dates</div>
         <div className="grid gap-2">
           <div>
@@ -100,9 +102,28 @@ export const DateRangeForm = ({
     );
   }
 
+  const { theme, resolvedTheme } = useTheme();
+
+  type ButtonVariant =
+    | "default"
+    | "link"
+    | "ghost-dark"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost";
+
+  const [buttonVariant, setButtonVariant] = useState<ButtonVariant>("ghost");
+
+  useEffect(() => {
+    const currentTheme: ButtonVariant =
+      theme === "dark" || resolvedTheme === "dark" ? "ghost-dark" : "ghost";
+    setButtonVariant(currentTheme);
+  }, [theme, resolvedTheme]);
+
   return (
-    <div className="mt-6 border bg-slate-100 rounded-md p-4">
-      <div className="font-medium mb-4">Event Dates</div>
+    <div className="mt-6 border bg-slate-100 rounded-md p-4 dark:bg-background-2nd-level dark:text-bg2-contrast">
+      <div className="font-medium mb-4">Event dates</div>
       {isEditing ? (
         <div className="grid gap-2">
           <div className="flex items-center gap-2">
@@ -117,8 +138,10 @@ export const DateRangeForm = ({
             />
           </div>
           <div className="flex gap-2 mt-4">
-            <Button onClick={handleSave}>Save Dates</Button>
-            <Button variant="secondary" onClick={handleCancel}>
+            <Button onClick={handleSave} variant={buttonVariant}>
+              Save Dates
+            </Button>
+            <Button variant={buttonVariant} onClick={handleCancel}>
               Cancel
             </Button>
           </div>
@@ -137,8 +160,12 @@ export const DateRangeForm = ({
               ? format(new Date(initialData.endDate), "MMM dd, yyyy")
               : "Not set"}{" "}
           </div>
-          <Button onClick={() => setIsEditing(true)} className="mt-4">
-            Edit Dates
+          <Button
+            onClick={() => setIsEditing(true)}
+            className="mt-4"
+            variant={buttonVariant}
+          >
+            Edit dates
           </Button>
         </div>
       )}

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Loader2, PlusCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { SessionsList } from "./sessions-list";
 import { SessionDescriptionForm } from "./session-description-form";
 import { SessionTimeForm } from "./session-time-form";
+import { useTheme } from "next-themes";
 
 type SessionsFormProps = {
   initialData: Event & { sessions: Session[] };
@@ -87,8 +88,27 @@ export const SessionsForm = ({
     router.push(`/user/events/${eventId}/sessions/${id}`);
   };
 
+  const { theme, resolvedTheme } = useTheme();
+
+  type ButtonVariant =
+    | "default"
+    | "link"
+    | "ghost-dark"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost";
+
+  const [buttonVariant, setButtonVariant] = useState<ButtonVariant>("ghost");
+
+  useEffect(() => {
+    const currentTheme: ButtonVariant =
+      theme === "dark" || resolvedTheme === "dark" ? "ghost-dark" : "ghost";
+    setButtonVariant(currentTheme);
+  }, [theme, resolvedTheme]);
+
   return (
-    <div className="relative mt-6 border bg-slate-100 rounded-md p-4">
+    <div className="relative mt-6 border bg-slate-100 rounded-md p-4 dark:bg-background-2nd-level dark:text-bg2-contrast">
       {isUpdating && (
         <div className="absolute h-full w-full bg-slate-500/20 top-0 right-0 rounded-md flex items-center justify-center">
           <Loader2 className="animate-spin h-6 w-6 text-sky-700" />
@@ -97,7 +117,7 @@ export const SessionsForm = ({
       <div className="font-medium flex items-center justify-between">
         Event sessions
         {editable && (
-          <Button onClick={toggleCreating} variant="ghost">
+          <Button onClick={toggleCreating} variant={buttonVariant}>
             {isCreating ? (
               <>Cancel</>
             ) : (
@@ -131,7 +151,11 @@ export const SessionsForm = ({
                 </FormItem>
               )}
             />
-            <Button disabled={!isValid || isSubmitting} type="submit">
+            <Button
+              disabled={!isValid || isSubmitting}
+              type="submit"
+              variant={buttonVariant}
+            >
               Create
             </Button>
           </form>
@@ -157,7 +181,7 @@ export const SessionsForm = ({
         initialData.sessions.map((session) => (
           <div
             key={session.id}
-            className="mt-6 border bg-slate-100 rounded-md p-4"
+            className="mt-6 border bg-slate-100 rounded-md p-4 dark:bg-background-2nd-level dark:text-bg2-contrast"
           >
             <h3 className="font-medium">Session: {session.title}</h3>
             <SessionDescriptionForm

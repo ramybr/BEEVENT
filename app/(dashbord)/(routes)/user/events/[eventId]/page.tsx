@@ -1,3 +1,5 @@
+// /app/events/[eventId]/page.tsx
+
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
@@ -14,6 +16,9 @@ import { VisibilityForm } from "@/components/visibility-form";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { InvitationForm } from "@/components/email-template";
+import { CalendarCheck, Info, QrCode } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 // Dynamically import the LocationForm to avoid SSR issues
 const LocationForm = dynamic(() => import("@/components/location-form"), {
@@ -64,19 +69,24 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
   return (
     <>
       {event.isOpen ? (
-        <Banner label="This event is public. It will be visible to all users." />
+        <Banner
+          variant="success"
+          label="This event is public. It will be visible to all users."
+        />
       ) : (
-        <Banner label="This event is private. It will be visible to invited participants only." />
+        <Banner
+          variant="success"
+          label="This event is private. It will be visible to invited participants only."
+        />
       )}
-      <div className="p-6 flex justify-center">
-        <div className="max-w-4xl w-full">
+      <div className="p-6 flex justify-center w-full">
+        <div className=" w-full flex flex-col">
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-y-2">
-              <h1 className="text-2xl font-medium">Event setup</h1>
-              <span className="text-sm text-slate-700">
-                Complete event informations
-              </span>
+              <h1 className="text-2xl font-medium">{event.name}</h1>
+              <h2 className="text-xl text-slate-500">Customize your event</h2>
             </div>
+
             <Actions
               eventId={params.eventId}
               isPublished={event.isPublished}
@@ -84,8 +94,18 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
               isParticipating={true}
             />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
-            <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16 w-full ">
+            <div className="flex flex-col space-y-6">
+              <Card className="flex p-4  content-center justify-center text-md bg-slate-300 dark:bg-bg1-contrast dark:text-background-1st-level max-w-80 self-center ">
+                <div className="flex justify-center content-center hover:text-banner-dark dark:hover:text-background-1st-level-slate100 transition">
+                  <span>
+                    <CalendarCheck className="mr-2" />
+                  </span>
+                  <Link href={`/user/events/${event.id}/participations`}>
+                    <span>Event participations</span>
+                  </Link>
+                </div>
+              </Card>
               <TitleForm
                 initialData={event}
                 eventId={event.id}
@@ -101,6 +121,19 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
                 eventId={event.id}
                 editable={true}
               />
+              <VisibilityForm initialData={event} eventId={event.id} editable />
+            </div>
+            <div className="flex flex-col space-y-6">
+              <Card className="flex p-4  content-center justify-center text-md bg-slate-300 dark:bg-bg1-contrast dark:text-background-1st-level max-w-80 self-center ">
+                <div className="flex justify-center content-center hover:text-banner-dark dark:hover:text-background-1st-level-slate100 transition">
+                  <span>
+                    <QrCode className="mr-2" />
+                  </span>
+                  <Link href={`/user/events/${event.id}/attendances`}>
+                    <span>Event attendances</span>
+                  </Link>
+                </div>
+              </Card>
               <EventTypeForm
                 initialData={event}
                 eventId={event.id}
@@ -110,31 +143,27 @@ const EventIdPage = async ({ params }: { params: { eventId: number } }) => {
                 }))}
                 editable={true}
               />
+              <DateRangeForm
+                initialData={event}
+                eventId={event.id}
+                editable={true}
+              />
+              <LocationForm initialData={event} eventId={event.id} editable />
               <SessionsForm
                 initialData={event}
                 eventId={event.id}
                 editable={true}
               />
             </div>
-
-            <div className="space-y-6">
-              <DateRangeForm
-                initialData={event}
-                eventId={event.id}
-                editable={true}
-              />
-              <VisibilityForm initialData={event} eventId={event.id} />
-              <LocationForm
-                initialData={event}
-                eventId={event.id}
-                editable={true}
-              />
-              <Button>
-                <Link href={`${event.id}/qrcode`}>
-                  <span className="button">Generate QR Code</span>
-                </Link>
-              </Button>
-            </div>
+          </div>
+          <div className="mt-6 flex justify-center">
+            <Button variant="dark" className="px-8">
+              <Link href={`${event.id}/qrcode`}>
+                <span className="button justify-self-center">
+                  Generate QR Code
+                </span>
+              </Link>
+            </Button>
           </div>
         </div>
       </div>

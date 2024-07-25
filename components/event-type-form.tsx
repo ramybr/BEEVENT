@@ -12,12 +12,13 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Event } from "@prisma/client";
 import { Combobox } from "@/components/ui/combobox";
+import { useTheme } from "next-themes";
 
 type EventTypeFormProps = {
   initialData: Event;
@@ -66,19 +67,38 @@ export const EventTypeForm = ({
     (option) => option.value === initialData.eventTypeId
   );
 
+  const { theme, resolvedTheme } = useTheme();
+
+  type ButtonVariant =
+    | "default"
+    | "link"
+    | "ghost-dark"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost";
+
+  const [buttonVariant, setButtonVariant] = useState<ButtonVariant>("ghost");
+
+  useEffect(() => {
+    const currentTheme: ButtonVariant =
+      theme === "dark" || resolvedTheme === "dark" ? "ghost-dark" : "ghost";
+    setButtonVariant(currentTheme);
+  }, [theme, resolvedTheme]);
+
   return (
     <>
       {editable && (
-        <div className="mt-6 border bg-slate-100 rounded-md p-4">
+        <div className="mt-6 border bg-slate-100 rounded-md p-4 dark:bg-background-2nd-level">
           <div className="font-medium flex items-center justify-between">
             Event Type
-            <Button onClick={toggleEdit} variant="ghost">
+            <Button onClick={toggleEdit} variant={buttonVariant}>
               {isEditing ? (
                 <>Cancel</>
               ) : (
                 <>
                   <Pencil className="h-4 m-4 mr-2" />
-                  Edit
+                  Edit type
                 </>
               )}
             </Button>
@@ -112,7 +132,11 @@ export const EventTypeForm = ({
                   )}
                 />
                 <div className="flex items-center gap-x-2">
-                  <Button disabled={!isValid || isSubmitting} type="submit">
+                  <Button
+                    disabled={!isValid || isSubmitting}
+                    type="submit"
+                    variant={buttonVariant}
+                  >
                     Save
                   </Button>
                 </div>
@@ -122,7 +146,7 @@ export const EventTypeForm = ({
         </div>
       )}
       {!editable && (
-        <div className="mt-6 border bg-slate-100 rounded-md p-4">
+        <div className="mt-6 border bg-slate-100 rounded-md p-4 dark:bg-background-2nd-level">
           <p className="font-medium flex items-center justify-between">
             Event Type
           </p>

@@ -1,67 +1,123 @@
-// file: /pages/user/participations.tsx
+"use client";
 
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/data-table";
-import { participationColumns } from "@/components/participations-columns";
-import { auth } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
-import { db } from "@/lib/db";
-import { NextResponse } from "next/server";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import ChangeRoleDialog from "@/components/change-role-dialog";
+import { useTheme } from "next-themes";
+import { Loader2 } from "lucide-react";
 
-const ParticipationsPage = async ({
-  params,
-}: {
-  params: { eventId: number };
-}) => {
-  const { userId } = auth();
+interface User {
+  firstName: string;
+  lastName: string;
+}
 
-  if (!userId) {
-    return redirect("/");
-  }
+interface Event {
+  id: number;
+  name: string;
+  location: string;
+  startDate: string;
+  endDate: string;
+  user: User;
+}
 
-  const user = await db.user.findUnique({
-    where: {
-      clerkId: userId,
+interface Participation {
+  id: number;
+  userId: number;
+  eventId: number;
+  roleInEvent: string;
+  user: User;
+  event: Event;
+}
+
+const participationColumns: ColumnDef<Participation>[] = [
+  {
+    accessorKey: "user.firstName",
+    header: "First Name",
+  },
+  {
+    accessorKey: "user.lastName",
+    header: "Last Name",
+  },
+  {
+    accessorKey: "roleInEvent",
+    header: "Role",
+    cell: ({ row }) => {
+      const { eventId } = useParams();
+
+      const { theme, resolvedTheme } = useTheme();
+
+      type ButtonVariant =
+        | "default"
+        | "link"
+        | "ghost-dark"
+        | "destructive"
+        | "outline"
+        | "secondary"
+        | "ghost";
+
+      const [buttonVariant, setButtonVariant] =
+        useState<ButtonVariant>("ghost");
+
+      useEffect(() => {
+        const currentTheme: ButtonVariant =
+          theme === "dark" || resolvedTheme === "dark" ? "ghost-dark" : "ghost";
+        setButtonVariant(currentTheme);
+      }, [theme, resolvedTheme]);
+
+      return (
+        <div className="flex items-center">
+          {row.original.roleInEvent}
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="ml-48" variant={buttonVariant}>
+                Change Role
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <ChangeRoleDialog
+                eventId={eventId as string}
+                participationId={row.original.id.toString()}
+                initialRole={row.original.roleInEvent}
+              />
+            </DialogContent>
+          </Dialog>
+        </div>
+      );
     },
-  });
+  },
+];
 
-  if (!user) {
-    return new NextResponse("User not found", { status: 404 });
-  }
+export default function EventParticipations() {
+  const [data, setData] = useState<Participation[]>([]);
+  const { eventId } = useParams();
+  const [loading, setLoading] = useState(true);
 
-  const event = await db.event.findUnique({
-    where: {
-      id: Number(params.eventId),
-    },
-  });
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(`/api/events/${eventId}/participations`);
+      const result = await response.json();
+      setLoading(false);
+      setData(result);
+    };
 
-  if (!event) {
-    return new NextResponse("Event not found", { status: 404 });
-  }
+    fetchData();
+  }, [eventId]);
 
-  const participations = await db.participation.findMany({
-    where: {
-      eventId: event.id,
-    },
-    include: {
-      event: {
-        include: {
-          user: true,
-        },
-      },
-    },
-    orderBy: {
-      id: "desc",
-    },
-  });
-
+  if (loading)
+    return (
+      <div className="flex items-center justify-center pt-48">
+        <Loader2 className="animate-spin h-6 w-6 dark:text-bg1-contrast" />
+      </div>
+    );
   return (
-    <div className="p-6">
-      <span>
-        <h1 className="text-2xl"> Participations in {event.name}</h1>
-      </span>
-      <DataTable columns={participationColumns} data={participations} />
-    </div>
+    <DataTable
+      columns={participationColumns}
+      data={data}
+      filterColumnId="user.firstName"
+    />
   );
-};
-
-export default ParticipationsPage;
+}

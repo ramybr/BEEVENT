@@ -21,6 +21,9 @@ export default withUt({
       },
     },
     extend: {
+      gridAutoRows: {
+        max: "max-content",
+      },
       fontFamily: {
         sans: [
           "Poppins",
@@ -41,6 +44,19 @@ export default withUt({
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
+        "background-1st-level": "#1C1A39",
+        "background-2nd-level": "#121129",
+        "background-1st-level-slate100": "#443f8c",
+        "bg1-contrast": "#B6B2EE",
+        "bg2-contrast": "#B6B2EE",
+        "button-dark": "#702575",
+        "banner-dark": "#2d2b67",
+        "hover-dark": "#8b88cd",
+        "magenta-dark": "#FF5DAB",
+        "green-dark": "#00BD9B",
+        "blue-dark": "#31AEF3",
+        "light-green-dark": "#A7FEDB",
+
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",

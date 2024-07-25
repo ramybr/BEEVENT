@@ -2,12 +2,11 @@ import { db } from "@/lib/db";
 import { Participation } from "@prisma/client";
 
 type GetUserParticipationsProps = {
-  userId: string;
+  userId: number;
 };
 
 export const getUserParticipations = async ({
   userId,
-  
 }: GetUserParticipationsProps) => {
   try {
     let participations: Participation[] = [];

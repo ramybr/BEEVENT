@@ -2,12 +2,13 @@
 
 import axios from "axios";
 import { Trash } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { ConfirmModal } from "@/components/modals/confirm-modal";
+import { useTheme } from "next-themes";
 
 interface ActionsProps {
   eventId: number;
@@ -24,6 +25,24 @@ export const Actions = ({
 }: ActionsProps) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const { theme, resolvedTheme } = useTheme();
+
+  type ButtonVariant =
+    | "default"
+    | "link"
+    | "ghost-dark"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost";
+
+  const [buttonVariant, setButtonVariant] = useState<ButtonVariant>("default");
+
+  useEffect(() => {
+    const currentTheme: ButtonVariant =
+      theme === "dark" || resolvedTheme === "dark" ? "ghost-dark" : "default";
+    setButtonVariant(currentTheme);
+  }, [theme, resolvedTheme]);
 
   const onClick = async () => {
     try {
@@ -93,13 +112,18 @@ export const Actions = ({
           <Button
             onClick={onClick}
             disabled={isLoading}
-            variant="outline"
             size="sm"
+            variant={buttonVariant}
           >
             {isPublished ? "Unpublish" : "Publish"}
           </Button>
           <ConfirmModal onConfirm={onDelete}>
-            <Button size="sm" disabled={isLoading}>
+            <Button
+              size="lg"
+              disabled={isLoading}
+              variant="outline"
+              className="hover:bg-destructive hover:text-destructive-foreground"
+            >
               <Trash className="h-4 w-4" />
             </Button>
           </ConfirmModal>
@@ -110,7 +134,7 @@ export const Actions = ({
             <Button
               onClick={onParticipate}
               disabled={isLoading}
-              // variant="outline"
+              variant={buttonVariant}
               size="sm"
             >
               Participate
@@ -119,7 +143,7 @@ export const Actions = ({
             <Button
               onClick={onCancelParticipation}
               disabled={isLoading}
-              // variant="outline"
+              variant={buttonVariant}
               size="sm"
             >
               Cancel Participation

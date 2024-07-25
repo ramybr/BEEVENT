@@ -1,9 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
+import { Attendance, Event, User } from "@prisma/client";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { Button } from "./ui/button";
 import { ArrowUpDown } from "lucide-react";
-import { Participation, Event, User } from "@prisma/client";
 
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
@@ -13,9 +15,12 @@ const formatDate = (dateString: string): string => {
   return `${day}/${month}/${year}`;
 };
 
-export const participationColumns: ColumnDef<
-  Participation & { event: Event & { user: User } }
->[] = [
+interface AttendanceWithRelations extends Attendance {
+  user: User;
+  event: Event;
+}
+
+export const columns: ColumnDef<AttendanceWithRelations>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -28,29 +33,13 @@ export const participationColumns: ColumnDef<
       </Button>
     ),
     cell: ({ row }) => (
-      <a href={`/events/${row.original.eventId}`} className="hover:underline">
+      <a
+        href={`/events/${row.original.eventId}`}
+        className="hover:underline pl-6"
+      >
         {row.original.event.name}
       </a>
     ),
-  },
-  {
-    accessorKey: "event.location",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Location
-      </Button>
-    ),
-  },
-  {
-    accessorKey: "event.user",
-    header: "Organizer",
-    cell: ({ row }) => {
-      const user = row.original.event.user;
-      return `${user.firstName} ${user.lastName}`;
-    },
   },
   {
     accessorKey: "event.startDate",
@@ -59,7 +48,7 @@ export const participationColumns: ColumnDef<
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        From
+        Date
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
@@ -69,20 +58,20 @@ export const participationColumns: ColumnDef<
     },
   },
   {
-    accessorKey: "event.endDate",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        To
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    accessorKey: "isPresent",
+    header: "Attendance",
     cell: ({ row }) => {
-      const endDate = row.original.event.endDate as string | null;
-      return endDate ? formatDate(endDate) : "Not set";
+      const isPresent = row.getValue("isPresent") as boolean;
+      return (
+        <Badge
+          className={cn(
+            "bg-background-1st-level-slate100 dark:bg-bg1-contrast",
+            isPresent && "bg-secondary"
+          )}
+        >
+          {isPresent ? "Present" : "Absent"}
+        </Badge>
+      );
     },
   },
 ];
-//TODO: create event participations column

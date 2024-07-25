@@ -78,7 +78,7 @@ export const SessionsList = ({
                 {(provided) => (
                   <div
                     className={cn(
-                      "flex items-center gap-x-2 bg-slate-200 border-slate-200 border text-slate-700 rounded-md mb-4 text-sm"
+                      "flex items-center gap-x-2 bg-slate-200 border-slate-200 border text-slate-700 rounded-md mb-4 text-sm dark:bg-background-2nd-level dark:text-bg2-contrast dark:border-none"
                     )}
                     ref={provided.innerRef}
                     {...provided.draggableProps}

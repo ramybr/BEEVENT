@@ -1,7 +1,5 @@
-// file: /pages/user/participations.tsx
-
 import { DataTable } from "@/components/data-table";
-import { participationColumns } from "@/components/participations-columns";
+import { participationColumns } from "@/components/user-participations-columns";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
@@ -45,7 +43,11 @@ const ParticipationsPage = async () => {
       <span>
         <h1 className="text-2xl">{user.firstName}'s Participations</h1>
       </span>
-      <DataTable columns={participationColumns} data={participations} />
+      <DataTable
+        columns={participationColumns}
+        data={participations}
+        filterColumnId="event.name"
+      />
     </div>
   );
 };

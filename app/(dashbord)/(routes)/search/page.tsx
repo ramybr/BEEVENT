@@ -5,6 +5,7 @@ import { getEvents } from "@/actions/get-events";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { EventsList } from "@/components/events-list";
+import { Sidebar } from "lucide-react";
 
 type SearchPageProps = {
   searchParams: {
@@ -38,12 +39,18 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
 
   return (
     <>
-      <div className="px-6 pt-6 md:hidden md:mb-0">
+      <div className="flex md:justify-center px-6 pt-6 md:hidden md:mb-0 dark:bg-background-2nd-level">
         <SearchInput />
       </div>
-      <div className="p-6 space-y-4">
+
+      <div className=" p-2 space-y-4 shadow-md sticky top-0 z-10 dark:bg-background-2nd-level">
         <Categories items={categories} />
-        <EventsList items={events} />
+      </div>
+
+      <div className="md:mx-10 p-10 mx-10 space-y-4  shadow-inner rounded-sm h-full dark:bg-background-1st-level dark:shadow-none">
+        <div>
+          <EventsList items={events} />
+        </div>
       </div>
     </>
   );

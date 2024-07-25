@@ -39,7 +39,12 @@ export const SessionActions = ({ eventId, sessionId }: SessionActionsProps) => {
   return (
     <div className="flex items-center gap-x-2">
       <ConfirmModal onConfirm={onDelete}>
-        <Button size="sm" disabled={isLoading}>
+        <Button
+          size="lg"
+          disabled={isLoading}
+          variant="outline"
+          className="hover:bg-destructive hover:text-destructive-foreground"
+        >
           <Trash className="h-4 w-4" />
         </Button>
       </ConfirmModal>
